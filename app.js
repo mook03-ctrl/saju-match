@@ -394,7 +394,7 @@ function getSecretLoveComment(sajuResult, gender) {
     if (hasInSocial) return "회사/사회활동에서 은밀한 만남이 생길 수 있어요.";
     if (hasInPrivate) return "개인/주변관계에서 은밀한 만남이 생길 수 있어요.";
     
-    return "새로운 취미 생활이나 여행을 통해 예상치 못한 인연을 만날 수 있어요."; // Default comment
+    return ""; // 조건(남자 편재, 여자 편관)에 해당하지 않으면 코멘트 없음
 }
 
 function renderManseGrid(sajuResult) {
