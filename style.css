@@ -468,6 +468,37 @@ input:focus {
     transition: width 0.5s ease;
 }
 
+/* Love Fortune Section */
+.love-fortune-section {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: rgba(255, 105, 180, 0.05);
+    border: 1px solid rgba(255, 105, 180, 0.2);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.love-fortune-section h4 {
+    margin: 0 0 0.5rem 0;
+    color: #ff6b81;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+}
+
+.hearts {
+    font-size: 1.5rem;
+    color: #ff4757;
+    margin-bottom: 0.5rem;
+    letter-spacing: 2px;
+}
+
+.love-comment {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    line-height: 1.4;
+}
+
 /* Partner Section */
 .partner-header {
     margin-top: 3rem;

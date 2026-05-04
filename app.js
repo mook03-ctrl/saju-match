@@ -47,6 +47,10 @@ const JIJANGGAN_HAN = {
     "午": "丙,己,丁", "未": "丁,乙,己", "申": "戊,壬,庚", "酉": "庚,辛", "戌": "辛,丁,戊", "亥": "戊,甲,壬"
 };
 
+const YIN_YANG_STEMS = {
+    "甲":"+", "乙":"-", "丙":"+", "丁":"-", "戊":"+", "己":"-", "庚":"+", "辛":"-", "壬":"+", "癸":"-"
+};
+
 const SINSAL_DATA = {
     "도화살": { label: "시선을 끄는 매력", desc: "눈빛이 강하고 이성에게 강한 끌림을 주는 색기와 인기를 가졌습니다." },
     "홍염살": { label: "치명적인 분위기", desc: "화려하고 섹시한 무대형 매력으로 사람들을 사로잡습니다." },
@@ -76,6 +80,21 @@ function getTenGod(dmEl, otherEl) {
     if(!otherEl) return "";
     let diff = (EL_INDEX[otherEl] - EL_INDEX[dmEl] + 5) % 5;
     return TEN_GODS_MAP[diff];
+}
+
+function getExactTenGod(dayStem, targetStem) {
+    if(!targetStem) return "";
+    let tg = getTenGod(ELEMENTS_KR[dayStem], ELEMENTS_KR[targetStem]);
+    if (!tg) return "비견"; 
+    
+    let isSameYinYang = YIN_YANG_STEMS[dayStem] === YIN_YANG_STEMS[targetStem];
+    
+    if (tg === "재성") return isSameYinYang ? "편재" : "정재";
+    if (tg === "관성") return isSameYinYang ? "편관" : "정관";
+    if (tg === "인성") return isSameYinYang ? "편인" : "정인";
+    if (tg === "식상") return isSameYinYang ? "식신" : "상관";
+    if (tg === "비겁") return isSameYinYang ? "비견" : "겁재";
+    return tg;
 }
 
 function calculateSaju(year, month, day, hour) {
@@ -241,6 +260,95 @@ function generateAnalysis(element, sinsal, tengod) {
     return { combined: combinedText.trim().replace(/\n/g, "<br>") };
 }
 
+function calculateLoveScore(sajuResult, gender) {
+    const today = Solar.fromDate(new Date());
+    const currentYearBaZi = today.getLunar().getEightChar();
+    const cYearStem = currentYearBaZi.getYearGan();
+    const cYearBranch = currentYearBaZi.getYearZhi();
+    
+    let score = 1.0; // Base score
+    const palja = sajuResult.palja;
+    const dS = palja.dS;
+    const dB = palja.dB;
+    const primaryElement = ELEMENTS_KR[dS];
+
+    // 합(合) 로직: 육합 (+2점)
+    const YUKHAP_MAP = {
+        "子":"丑", "丑":"子", "寅":"亥", "亥":"寅", 
+        "卯":"戌", "戌":"卯", "辰":"酉", "酉":"辰", 
+        "巳":"申", "申":"巳", "午":"未", "未":"午"
+    };
+    if (YUKHAP_MAP[dB] === cYearBranch) score += 2.0;
+
+    // 지장간 암합 (+1.5점)
+    const CHEONGAN_HAP = {
+        "甲":"己", "己":"甲", "乙":"庚", "庚":"乙",
+        "丙":"辛", "辛":"丙", "丁":"壬", "壬":"丁",
+        "戊":"癸", "癸":"戊"
+    };
+    const dbJijanggan = JIJANGGAN_HAN[dB].split(",");
+    const ybJijanggan = JIJANGGAN_HAN[cYearBranch].split(",");
+    let amhap = false;
+    dbJijanggan.forEach(d_char => {
+        ybJijanggan.forEach(y_char => {
+            if (CHEONGAN_HAP[d_char] === y_char) amhap = true;
+        });
+    });
+    if (amhap) score += 1.5;
+
+    // 십성(十星) 로직 (+1.5점)
+    const tgStem = getTenGod(primaryElement, ELEMENTS_KR[cYearStem]);
+    const tgBranch = getTenGod(primaryElement, ELEMENTS_KR[cYearBranch]);
+    if (gender === 'male' && (tgStem === "재성" || tgBranch === "재성")) score += 1.5;
+    if (gender === 'female' && (tgStem === "관성" || tgBranch === "관성")) score += 1.5;
+
+    // 신살(神殺) 로직 (+1점)
+    const DOHWA_MAP = {
+        "申":"酉", "子":"酉", "辰":"酉", "寅":"卯", "午":"卯", "戌":"卯",
+        "亥":"子", "卯":"子", "未":"子", "巳":"午", "酉":"午", "丑":"午"
+    };
+    if (DOHWA_MAP[palja.yB] === cYearBranch || DOHWA_MAP[dB] === cYearBranch) score += 1.0;
+    
+    const HONG_MAP = {
+        "甲":["午"], "乙":["午","申"], "丙":["寅"], "丁":["未"], "戊":["辰"],
+        "己":["辰"], "庚":["戌"], "辛":["酉"], "壬":["子","申"], "癸":["申"]
+    };
+    if (HONG_MAP[dS] && HONG_MAP[dS].includes(cYearBranch)) score += 1.0;
+
+    // 충(沖) 로직 (+0.5점)
+    const CHUNG_MAP = {
+        "子":"午", "午":"子", "丑":"未", "未":"丑", "寅":"申", "申":"寅",
+        "卯":"酉", "酉":"卯", "辰":"戌", "戌":"辰", "巳":"亥", "亥":"巳"
+    };
+    if (CHUNG_MAP[dB] === cYearBranch) score += 0.5;
+
+    return Math.min(score, 5.0);
+}
+
+function getSecretLoveComment(sajuResult, gender) {
+    const palja = sajuResult.palja;
+    const dS = palja.dS;
+    
+    const targetTenGod = gender === 'male' ? "편재" : "편관";
+    
+    const checkJijanggan = (branch) => {
+        const chars = JIJANGGAN_HAN[branch].split(",");
+        for (let char of chars) {
+            if (getExactTenGod(dS, char) === targetTenGod) return true;
+        }
+        return false;
+    };
+
+    const hasInSocial = checkJijanggan(palja.yB) || checkJijanggan(palja.mB);
+    const hasInPrivate = checkJijanggan(palja.dB) || checkJijanggan(palja.hB);
+
+    if (hasInSocial && hasInPrivate) return "사회활동과 사적인 관계 모두에서 은밀하고 깊은 만남이 생길 수 있어요.";
+    if (hasInSocial) return "회사/사회활동에서 은밀한 만남이 생길 수 있어요.";
+    if (hasInPrivate) return "개인/주변관계에서 은밀한 만남이 생길 수 있어요.";
+    
+    return "새로운 취미 생활이나 여행을 통해 예상치 못한 인연을 만날 수 있어요."; // Default comment
+}
+
 function renderManseGrid(sajuResult) {
     const grid = document.getElementById('manse-grid');
     grid.innerHTML = '';
@@ -390,7 +498,7 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
     const checkLoad = () => {
         imagesLoaded++;
         if(imagesLoaded >= 2) { 
-            renderResult(name, sajuResult, analysis, loadedSrcs.main, finalFilters.main);
+            renderResult(name, sajuResult, analysis, loadedSrcs.main, finalFilters.main, gender);
             renderManseGrid(sajuResult); // Add Manse Grid rendering
             renderPartnerResult(partnerData, loadedSrcs.partner, finalFilters.partner);
             document.getElementById('loading-section').classList.remove('active');
@@ -419,7 +527,7 @@ document.getElementById('back-btn').addEventListener('click', () => {
     document.getElementById('input-section').classList.add('active');
 });
 
-function renderResult(name, sajuResult, analysis, imgSrc, filter) {
+function renderResult(name, sajuResult, analysis, imgSrc, filter, gender) {
     document.getElementById('result-name').textContent = name;
     
     document.getElementById('primary-element').innerHTML = `${ELEMENT_LABELS[sajuResult.primaryElement]}`;
@@ -442,6 +550,20 @@ function renderResult(name, sajuResult, analysis, imgSrc, filter) {
     const mainImg = document.getElementById('main-img');
     mainImg.src = imgSrc;
     mainImg.style.filter = filter;
+
+    // Love Fortune Rendering
+    const loveScore = calculateLoveScore(sajuResult, gender);
+    const fullHearts = Math.floor(loveScore);
+    const hasHalfHeart = loveScore % 1 !== 0;
+    const emptyHearts = 5 - fullHearts - (hasHalfHeart ? 1 : 0);
+    
+    let heartsHtml = '';
+    for(let i=0; i<fullHearts; i++) heartsHtml += '♥';
+    if(hasHalfHeart) heartsHtml += '♡'; // (Could use a half-heart character or just empty)
+    for(let i=0; i<emptyHearts; i++) heartsHtml += '♡';
+    
+    document.getElementById('love-hearts').innerHTML = heartsHtml;
+    document.getElementById('love-comment').textContent = getSecretLoveComment(sajuResult, gender);
 }
 
 function renderPartnerResult(partnerData, imgSrc, filter) {
