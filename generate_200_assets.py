@@ -3,34 +3,32 @@ import urllib.parse
 import os
 import time
 
-def download_image(filename, prompt, retries=3):
+def download_image(filename, prompt, retries=5):
     if os.path.exists(filename):
-        print(f"Skipping {filename}, already exists.")
-        return True
+        return f"Skipped {filename} (Exists)"
 
-    print(f"Downloading {filename}...")
     encoded_prompt = urllib.parse.quote(prompt)
     url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=600&height=750&nologo=true&seed=42"
     
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
     }
     
     for attempt in range(retries):
         try:
             req = urllib.request.Request(url, headers=headers)
-            with urllib.request.urlopen(req, timeout=15) as response, open(filename, 'wb') as out_file:
+            with urllib.request.urlopen(req, timeout=30) as response, open(filename, 'wb') as out_file:
                 data = response.read()
                 out_file.write(data)
-            print(f"Successfully downloaded {filename}")
-            time.sleep(1.5)
-            return True
+            time.sleep(3) # 3초 대기 (유저 요청)
+            return f"Success: {filename}"
         except Exception as e:
-            print(f"Attempt {attempt + 1} failed for {filename}: {e}")
-            time.sleep(3)
-    
-    print(f"Failed to download {filename} after {retries} retries.")
-    return False
+            print(f"Retry {attempt+1} for {filename} due to {e}", flush=True)
+            time.sleep(5) # 실패 시 5초 대기 후 재시도
+            if attempt == retries - 1:
+                return f"Failed: {filename} - {e}"
+
+    return f"Failed: {filename}"
 
 elements = {
     "목": "thin and tall body, long straight face, pure natural innocent vibe",
@@ -57,17 +55,20 @@ vibes = {
 
 os.makedirs('assets', exist_ok=True)
 
-# Generate 200 combinations
+tasks = []
 for e_key, e_desc in elements.items():
     for t_key, t_desc in tengods.items():
         for v_key, v_desc in vibes.items():
-            
-            # MALE
             prompt_m = f"High fashion photorealistic portrait of a young Korean man, {e_desc}, {t_desc}, {v_desc}, Seoul street style, k-pop idol, highly detailed, 8k resolution, cinematic lighting"
-            download_image(f"assets/m_{e_key}_{t_key}_{v_key}.png", prompt_m)
+            tasks.append((f"assets/m_{e_key}_{t_key}_{v_key}.png", prompt_m))
             
-            # FEMALE
             prompt_f = f"High fashion photorealistic portrait of a young Korean woman, {e_desc}, {t_desc}, {v_desc}, Seoul street style, k-pop idol, highly detailed, 8k resolution, cinematic lighting"
-            download_image(f"assets/f_{e_key}_{t_key}_{v_key}.png", prompt_f)
+            tasks.append((f"assets/f_{e_key}_{t_key}_{v_key}.png", prompt_f))
 
-print("Finished generating 200 combinations!")
+print(f"Starting generation of {len(tasks)} images with 3-second delay...", flush=True)
+
+for i, (fname, prompt) in enumerate(tasks):
+    res = download_image(fname, prompt)
+    print(f"[{i+1}/{len(tasks)}] {res}", flush=True)
+
+print("Finished generating all images!", flush=True)
