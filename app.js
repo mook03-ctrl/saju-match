@@ -75,29 +75,6 @@ const ELEMENT_TRAITS = {
     "수": { body: "부드럽고 유연한 몸선을 가졌으며 전체적으로 둥글둥글한 체질입니다.", face: "얼굴이 둥글고 볼살이 있으며 큰 눈과 도톰한 입술을 가졌습니다.", vibe: "귀엽고 감성적이며 다가가기 쉬운 친근한 동안 느낌입니다." }
 };
 
-const PROMPT_ELEMENTS = {
-    "목": "thin and tall body, long straight face, pure natural innocent vibe",
-    "화": "fit body with strong shoulders, V-line sharp face, intense eyes, glamorous sexy vibe",
-    "토": "balanced sturdy body, round soft face, reliable comfortable vibe",
-    "금": "skinny bony body, sharp clear facial features, cold chic city vibe",
-    "수": "soft curvy body, round face with big dewy eyes, cute emotional vibe"
-};
-
-const PROMPT_TENGODS = {
-    "비겁": "distinctive facial bone structure, confident self-assertive look",
-    "식상": "youthful cute face, highly expressive, celebrity-like",
-    "재성": "perfectly symmetrical balanced face, neat likable impression",
-    "관성": "straight tidy facial lines, trustworthy handsome/beautiful classic look",
-    "인성": "soft innocent eyes, pure look that stimulates protective instinct"
-};
-
-const PROMPT_VIBES = {
-    "charm": "intense alluring gaze, fatal attractive charm, sexy stage presence",
-    "noble": "luxurious noble aura, high-class elegant vibe, clean impression",
-    "unique": "exotic unique vibe, unconventional creative aura, mysterious",
-    "strong": "overwhelming charisma, powerful intense stance, strong bold aura"
-};
-
 const EL_INDEX = {"목":0, "화":1, "토":2, "금":3, "수":4};
 function getTenGod(dmEl, otherEl) {
     if(!otherEl) return "";
@@ -546,15 +523,8 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
     const gPrefix = gender === 'male' ? 'm' : 'f';
     const pPrefix = gender === 'male' ? 'f' : 'm'; 
     
-    function getDynamicImageUrl(isMale, element, tengod, vibe) {
-        const noun = isMale ? "man" : "woman";
-        const prompt = `High fashion photorealistic portrait of a young Korean ${noun}, ${PROMPT_ELEMENTS[element]}, ${PROMPT_TENGODS[tengod]}, ${PROMPT_VIBES[vibe]}, Seoul street style, k-pop idol, highly detailed, 8k resolution, cinematic lighting`;
-        // Use a static seed so the same user gets the same picture on refresh
-        return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=600&height=750&nologo=true&seed=42`;
-    }
-
-    const mainSrc = getDynamicImageUrl(gender === 'male', sajuResult.primaryElement, sajuResult.dominantTenGod, sajuResult.vibeGroup);
-    const partnerSrc = getDynamicImageUrl(gender === 'female', partnerData.primaryElement, partnerData.dominantTenGod, partnerData.vibeGroup);
+    const mainSrc = `assets/${gPrefix}_${sajuResult.primaryElement}_${sajuResult.dominantTenGod}_${sajuResult.vibeGroup}.png`;
+    const partnerSrc = `assets/${pPrefix}_${partnerData.primaryElement}_${partnerData.dominantTenGod}_${partnerData.vibeGroup}.png`;
 
     const fallbackFilters = {
         "비겁": "contrast(1.1) brightness(1.05)",
@@ -586,7 +556,6 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
 
     imgsInfo.forEach(item => {
         const img = new Image();
-        img.crossOrigin = "anonymous";
         img.onload = () => {
             loadedSrcs[item.el] = item.src;
             finalFilters[item.el] = "none";
