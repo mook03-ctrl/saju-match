@@ -586,6 +586,7 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
 
     imgsInfo.forEach(item => {
         const img = new Image();
+        img.crossOrigin = "anonymous";
         img.onload = () => {
             loadedSrcs[item.el] = item.src;
             finalFilters[item.el] = "none";
