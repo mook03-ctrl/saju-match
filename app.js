@@ -240,19 +240,19 @@ function findIdealPartner(userSaju) {
     };
 }
 
-function generateAnalysis(element, sinsal, tengod) {
+function generateAnalysis(element, sinsal, tengod, pronoun = "당신") {
     const elData = ELEMENT_TRAITS[element];
     const tenGodData = TENGODS_DATA[tengod];
     const sinsalData = SINSAL_DATA[sinsal];
 
     const combinedText = `
-당신의 외모는 오행, 십성, 신살의 시너지로 완성되었습니다. 
+${pronoun}의 외모는 오행, 십성, 신살의 시너지로 완성되었습니다. 
 
 **[체형과 이목구비의 근원: ${ELEMENT_LABELS[element]}]**
 오행 '${element}'의 영향으로 ${elData.body} 얼굴은 ${elData.face} 베이스로 깔려 있는 분위기는 ${elData.vibe}입니다.
 
 **[인상과 뼈대의 주장: ${tengod}]**
-십성 중 '${tengod}'의 기운이 강하여 ${tenGodData.desc} 사회적으로 보여지는 당신의 얼굴은 사람들에게 명확한 이미지를 각인시킵니다.
+십성 중 '${tengod}'의 기운이 강하여 ${tenGodData.desc} 사회적으로 보여지는 ${pronoun}의 얼굴은 사람들에게 명확한 이미지를 각인시킵니다.
 
 **[분위기와 끌림의 포인트: ${sinsal}]**
 여기에 신살 '${sinsal}'이 더해져, ${sinsalData.desc} 고유한 매력을 뿜어냅니다.`;
@@ -500,7 +500,7 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
         if(imagesLoaded >= 2) { 
             renderResult(name, sajuResult, analysis, loadedSrcs.main, finalFilters.main, gender);
             renderManseGrid(sajuResult); // Add Manse Grid rendering
-            renderPartnerResult(partnerData, loadedSrcs.partner, finalFilters.partner);
+            renderPartnerResult(partnerData, loadedSrcs.partner, finalFilters.partner, gender);
             document.getElementById('loading-section').classList.remove('active');
             document.getElementById('result-section').classList.add('active');
         }
@@ -566,7 +566,7 @@ function renderResult(name, sajuResult, analysis, imgSrc, filter, gender) {
     document.getElementById('love-comment').textContent = getSecretLoveComment(sajuResult, gender);
 }
 
-function renderPartnerResult(partnerData, imgSrc, filter) {
+function renderPartnerResult(partnerData, imgSrc, filter, gender) {
     document.getElementById('compat-score').textContent = partnerData.score;
     document.getElementById('compat-traits').textContent = partnerData.traitsText;
     
@@ -590,7 +590,8 @@ function renderPartnerResult(partnerData, imgSrc, filter) {
     document.getElementById('p-sinsal-tag').textContent = `분위기: ${partnerData.dominantSinsal} - ${SINSAL_DATA[partnerData.dominantSinsal].label}`;
     document.getElementById('p-element-tag').textContent = `체형: ${partnerData.primaryElement} - ${elShortDesc[partnerData.primaryElement]}`;
 
-    const pAnalysis = generateAnalysis(partnerData.primaryElement, partnerData.dominantSinsal, partnerData.dominantTenGod);
+    const pronoun = gender === 'male' ? "그녀" : "그";
+    const pAnalysis = generateAnalysis(partnerData.primaryElement, partnerData.dominantSinsal, partnerData.dominantTenGod, pronoun);
     document.getElementById('p-combined-analysis').innerHTML = pAnalysis.combined + `<br><br><span style="color:var(--fire); font-weight:600;">💞 완벽한 보완재:</span> 이 사람은 당신의 일지와 조후를 완벽히 채워주는 운명적 이끌림을 선사합니다.`;
 
     const pMainImg = document.getElementById('p-main-img');
