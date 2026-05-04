@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사주 매치</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Inter:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lunar-javascript/1.7.4/lunar.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Landing / Input Section -->
+        <section id="input-section" class="screen active">
+            <div class="header">
+                <h1>사주 매치</h1>
+                <p>당신의 운명과 인연을 분석해드립니다.</p>
+            </div>
+            
+            <form id="saju-form" class="form-container">
+                <div class="input-group">
+                    <label>이름 (Name)</label>
+                    <input type="text" id="user-name" placeholder="이름을 입력하세요" required>
+                </div>
+                
+                <div class="input-group">
+                    <label>성별 (Gender)</label>
+                    <div class="gender-toggle">
+                        <input type="radio" id="gender-m" name="gender" value="male" checked>
+                        <label for="gender-m">남성</label>
+                        <input type="radio" id="gender-f" name="gender" value="female">
+                        <label for="gender-f">여성</label>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label>생년월일 (YYYYMMDD)</label>
+                    <input type="text" id="user-dob" placeholder="예: 19900524" maxlength="10" required>
+                </div>
+                
+                <div class="input-group">
+                    <label>태어난 시간 (HHMM - 24H)</label>
+                    <input type="text" id="user-time" placeholder="예: 1430" maxlength="5" required>
+                </div>
+
+                <button type="submit" class="btn-primary">사주 외모 분석 하기</button>
+            </form>
+            <footer style="text-align: center; font-size: 0.75rem; color: #888; margin-top: 3rem;">
+                Copyright 2026 saju-match.com (v0.5 by mook)
+            </footer>
+        </section>
+
+        <!-- Loading Section -->
+        <section id="loading-section" class="screen">
+            <div class="spinner"></div>
+            <p>오행, 십성, 신살의 시너지를 분석 중입니다...</p>
+        </section>
+
+        <!-- Result Section -->
+        <section id="result-section" class="screen">
+            <div class="result-header">
+                <button id="back-btn" class="btn-icon">←</button>
+                <h2>나만의 사주 외모 룩북</h2>
+                <button id="download-btn" class="btn-icon">↓</button>
+            </div>
+
+            <!-- The Lookbook Card -->
+            <div id="capture-area" class="lookbook-card">
+                <div class="card-background" id="card-bg"></div>
+                
+                <div class="card-content">
+                    <div class="portrait-box">
+                        <img id="main-img" src="" alt="Character Portrait">
+                        <div class="tag-group">
+                            <div class="tag" id="element-tag">체형</div>
+                            <div class="tag" id="tengod-tag">인상</div>
+                            <div class="tag" id="sinsal-tag">분위기</div>
+                        </div>
+                    </div>
+                    
+                    <div class="manse-section">
+                        <div class="manse-grid" id="manse-grid">
+                            <!-- JS will populate the 4x2 grid, ten gods, and jijanggan -->
+                        </div>
+                        <div class="saju-stats">
+                            <div class="stat-box" id="saju-strength">
+                                <span class="stat-label">신강신약</span>
+                                <strong class="stat-val">판별중</strong>
+                            </div>
+                            <div class="stat-box" id="saju-yongsin">
+                                <span class="stat-label">조후용신</span>
+                                <strong class="stat-val">판별중</strong>
+                            </div>
+                        </div>
+                        <div class="element-distribution" id="element-dist">
+                            <!-- JS will populate progress bars -->
+                        </div>
+                    </div>
+                    
+                    <div class="card-text">
+                        <h3 id="result-name">Name</h3>
+                        <p class="element-title" id="primary-element">Wood Element</p>
+                        
+                        <div class="analysis-box">
+                            <h4>3단계 외모 상세 분석 리포트</h4>
+                            <p id="combined-analysis">...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-footer">
+                    <span>saju-match.com</span>
+                </div>
+            </div>
+
+            <!-- Ideal Partner Section -->
+            <div class="partner-header">
+                <h3>💞 천생연분 궁합 파트너</h3>
+                <div class="compatibility-score">
+                    <div class="score-circle">
+                        <span id="compat-score">0</span><small>점</small>
+                    </div>
+                    <div class="score-text">
+                        <p id="compat-traits">분석 중...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="partner-card" class="lookbook-card">
+                <div class="card-background" id="p-card-bg"></div>
+                
+                <div class="card-content">
+                    <div class="portrait-box">
+                        <img id="p-main-img" src="" alt="Partner Portrait">
+                        <div class="tag-group">
+                            <div class="tag" id="p-element-tag">체형</div>
+                            <div class="tag" id="p-tengod-tag">인상</div>
+                            <div class="tag" id="p-sinsal-tag">분위기</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-text">
+                        <h3 id="p-result-name">운명의 파트너</h3>
+                        <p class="element-title" id="p-primary-element">Element</p>
+                        
+                        <div class="analysis-box">
+                            <h4>파트너 외모 & 시너지 분석</h4>
+                            <p id="p-combined-analysis">...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-footer">
+                    <span>saju-match.com/partner</span>
+                </div>
+            </div>
+            
+            <footer style="text-align: center; font-size: 0.75rem; color: #888; margin-top: 3rem; margin-bottom: 2rem;">
+                Copyright 2026 saju-match.com (v0.5 by mook)
+            </footer>
+        </section>
+
+        <!-- Admin Section -->
+        <section id="admin-section" class="screen">
+            <div class="header">
+                <h1>관리자 대시보드</h1>
+                <p>실시간 검색 이력 및 통계</p>
+            </div>
+            <div class="admin-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>이름</th>
+                            <th>생년월일/시간</th>
+                            <th>검색 일시</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-table-body">
+                        <!-- Data will be injected here -->
+                    </tbody>
+                </table>
+                <button id="btn-close-admin" class="btn-primary" style="margin-top:2rem;">돌아가기</button>
+            </div>
+        </section>
+    </div>
+    <script type="module" src="app.js"></script>
+</body>
+</html>
