@@ -59,10 +59,10 @@ const PROMPT_TENGODS = {
 };
 
 const PROMPT_VIBES = {
-    "charm": { shot: "waist-up portrait", desc: "attractive charm, casual everyday clothes, bright daylight, outdoor cafe background" },
-    "noble": { shot: "knee-up full body shot", desc: "elegant vibe, stylish everyday fashion, bright daylight, beautiful street background" },
-    "unique": { shot: "waist-up portrait", desc: "unique and creative casual style, bright daylight, cozy indoor background" },
-    "strong": { shot: "knee-up full body shot", desc: "confident stance, modern casual street fashion, bright daylight, city street background" }
+    "charm": { shot: "Medium full shot, thigh-up portrait, slightly zoomed in", desc: "sophisticated light spring fashion, elegant and stylish, not tacky, bright daylight, cozy stylish cafe background" },
+    "noble": { shot: "Medium full shot, thigh-up portrait, slightly zoomed in", desc: "sophisticated trendy spring fashion, elegant and stylish, not tacky, bright daylight, beautiful natural street background" },
+    "unique": { shot: "Medium full shot, thigh-up portrait, slightly zoomed in", desc: "sophisticated light spring fashion, creative and stylish, not tacky, bright daylight, cozy stylish cafe background" },
+    "strong": { shot: "Medium full shot, thigh-up portrait, slightly zoomed in", desc: "sophisticated modern street fashion, elegant and stylish, not tacky, bright daylight, beautiful natural street background" }
 };
 
 const JIJANGGAN_HAN = {
@@ -548,10 +548,11 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
     
     function getDynamicImageUrl(isMale, element, tengod, vibe, seed=42) {
         const genderNoun = isMale ? "handsome Korean man" : "beautiful Korean woman";
-        const basePrompt = "Casual natural photorealistic snapshot, bright soft natural lighting, no prominent cheekbones, not a fashion model";
+        const accessoryRule = isMale ? "clean look, no necklace, no jewelry, minimal accessories, " : "";
+        const basePrompt = "photorealistic snapshot, bright soft natural lighting, no prominent cheekbones, not a fashion model, character taking up most of the frame";
         const shot = PROMPT_VIBES[vibe].shot;
         const vDesc = PROMPT_VIBES[vibe].desc;
-        const prompt = `${shot} of a young 20s ${genderNoun}, ${basePrompt}, ${PROMPT_ELEMENTS[element]}, ${PROMPT_TENGODS[tengod]}, ${vDesc}, highly detailed, 2k resolution`;
+        const prompt = `${shot} of an early 30s mature and ${genderNoun}, ${accessoryRule}${basePrompt}, ${PROMPT_ELEMENTS[element]}, ${PROMPT_TENGODS[tengod]}, ${vDesc}, highly detailed, 2k resolution`;
         return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=600&height=750&nologo=true&seed=${seed}`;
     }
 
