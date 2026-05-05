@@ -926,7 +926,6 @@ function showPartnerResult() {
         document.getElementById('partner-match-card-container').classList.remove('hidden');
         
         document.getElementById('match-name').textContent = "??? (매칭 대기중)"; 
-        document.getElementById('match-birth').textContent = "나타나기를 기다리는 중입니다";
         
         document.getElementById('match-overall').textContent = '0%';
         document.getElementById('match-personality').textContent = '0%';
@@ -943,7 +942,6 @@ function showPartnerResult() {
     
     const match = currentMatches[currentMatchIndex];
     document.getElementById('match-name').textContent = match.name.substring(0, 1) + 'ㅇㅇ'; 
-    document.getElementById('match-birth').textContent = `${match.dob} ${match.time}`;
     
     document.getElementById('match-overall').textContent = match.compat.overall + '%';
     document.getElementById('match-personality').textContent = match.compat.personality + '%';
