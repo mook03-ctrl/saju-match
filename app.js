@@ -42,6 +42,29 @@ const ELEMENT_COLORS = {
 const TEN_GODS_MAP = ["비겁", "식상", "재성", "관성", "인성"];
 const SINSAL_MAP = ["도화살", "홍염살", "천을귀인", "역마살", "괴강살"];
 
+const PROMPT_ELEMENTS = {
+    "목": "slender and tall body, slightly long natural face shape, pure and innocent vibe",
+    "화": "fit and healthy body, slim V-line face, bright eyes, glamorous yet casual vibe",
+    "토": "well-balanced sturdy body, round and soft friendly face, reliable and comfortable vibe",
+    "금": "slim body, clear and neat facial features, chic and clean vibe",
+    "수": "soft and slightly curvy body, round face with big dewy eyes, cute and emotional vibe"
+};
+
+const PROMPT_TENGODS = {
+    "비겁": "confident but friendly look, natural facial lines, soft smile",
+    "식상": "youthful and cute face, highly expressive, bright natural smile",
+    "재성": "neat and symmetrical face, highly likable and gentle impression, soft smile",
+    "관성": "straight tidy facial lines, trustworthy and classic handsome/beautiful look, gentle smile",
+    "인성": "soft innocent eyes, pure and gentle look, very friendly expression"
+};
+
+const PROMPT_VIBES = {
+    "charm": { shot: "waist-up portrait", desc: "attractive charm, casual everyday clothes, bright daylight, outdoor cafe background" },
+    "noble": { shot: "knee-up full body shot", desc: "elegant vibe, stylish everyday fashion, bright daylight, beautiful street background" },
+    "unique": { shot: "waist-up portrait", desc: "unique and creative casual style, bright daylight, cozy indoor background" },
+    "strong": { shot: "knee-up full body shot", desc: "confident stance, modern casual street fashion, bright daylight, city street background" }
+};
+
 const JIJANGGAN_HAN = {
     "子": "壬,癸", "丑": "癸,辛,己", "寅": "戊,丙,甲", "卯": "甲,乙", "辰": "乙,癸,戊", "巳": "戊,庚,丙",
     "午": "丙,己,丁", "未": "丁,乙,己", "申": "戊,壬,庚", "酉": "庚,辛", "戌": "辛,丁,戊", "亥": "戊,甲,壬"
@@ -523,8 +546,17 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
     const gPrefix = gender === 'male' ? 'm' : 'f';
     const pPrefix = gender === 'male' ? 'f' : 'm'; 
     
-    const mainSrc = `assets/${gPrefix}_${sajuResult.primaryElement}_${sajuResult.dominantTenGod}_${sajuResult.vibeGroup}.png`;
-    const partnerSrc = `assets/${pPrefix}_${partnerData.primaryElement}_${partnerData.dominantTenGod}_${partnerData.vibeGroup}.png`;
+    function getDynamicImageUrl(isMale, element, tengod, vibe, seed=42) {
+        const genderNoun = isMale ? "handsome Korean man" : "beautiful Korean woman";
+        const basePrompt = "Casual natural photorealistic snapshot, bright soft natural lighting, no prominent cheekbones, not a fashion model";
+        const shot = PROMPT_VIBES[vibe].shot;
+        const vDesc = PROMPT_VIBES[vibe].desc;
+        const prompt = `${shot} of a young 20s ${genderNoun}, ${basePrompt}, ${PROMPT_ELEMENTS[element]}, ${PROMPT_TENGODS[tengod]}, ${vDesc}, highly detailed, 8k resolution`;
+        return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=600&height=750&nologo=true&seed=${seed}`;
+    }
+
+    const mainSrc = getDynamicImageUrl(gender === 'male', sajuResult.primaryElement, sajuResult.dominantTenGod, sajuResult.vibeGroup, 42);
+    const partnerSrc = getDynamicImageUrl(gender === 'female', partnerData.primaryElement, partnerData.dominantTenGod, partnerData.vibeGroup, 42);
 
     const fallbackFilters = {
         "비겁": "contrast(1.1) brightness(1.05)",
@@ -556,6 +588,7 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
 
     imgsInfo.forEach(item => {
         const img = new Image();
+        img.crossOrigin = "anonymous";
         img.onload = () => {
             loadedSrcs[item.el] = item.src;
             finalFilters[item.el] = "none";
