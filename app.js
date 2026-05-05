@@ -923,7 +923,18 @@ function showPartnerResult() {
     
     if (currentMatches.length === 0) {
         document.getElementById('no-partner-msg').classList.remove('hidden');
-        document.getElementById('partner-match-card-container').classList.add('hidden');
+        document.getElementById('partner-match-card-container').classList.remove('hidden');
+        
+        document.getElementById('match-name').textContent = "??? (매칭 대기중)"; 
+        document.getElementById('match-birth').textContent = "나타나기를 기다리는 중입니다";
+        
+        document.getElementById('match-overall').textContent = '0%';
+        document.getElementById('match-personality').textContent = '0%';
+        document.getElementById('match-wealth').textContent = '0%';
+        document.getElementById('match-sexual').textContent = '0%';
+        
+        document.getElementById('modal-instagram').textContent = "아직 등록되지 않았습니다";
+        document.getElementById('modal-email').textContent = "아직 등록되지 않았습니다";
         return;
     }
     
@@ -962,12 +973,6 @@ document.getElementById('btn-close-modal').addEventListener('click', () => {
 });
 
 document.getElementById('btn-back-to-main').addEventListener('click', () => {
-    document.getElementById('partner-matching-results-section').classList.remove('active');
-    document.getElementById('partner-matching-results-section').classList.add('hidden');
-    document.getElementById('result-section').classList.add('active');
-});
-
-document.getElementById('btn-back-to-main-from-empty').addEventListener('click', () => {
     document.getElementById('partner-matching-results-section').classList.remove('active');
     document.getElementById('partner-matching-results-section').classList.add('hidden');
     document.getElementById('result-section').classList.add('active');

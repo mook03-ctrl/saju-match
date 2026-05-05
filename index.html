@@ -218,7 +218,7 @@
         <!-- Partner Registration Section -->
         <section id="partner-registration-section" class="screen hidden">
             <div class="header">
-                <h2 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--primary-color);">당신의 사주 단지를 구성해주세요</h2>
+                <h2 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--primary-color);">당신의 사주 단자를 구성해주세요</h2>
                 <p style="font-size: 0.9rem;">매칭을 위한 연락처 정보를 입력해주세요</p>
             </div>
             <form id="partner-form" class="form-container">
@@ -240,8 +240,16 @@
                 </div>
                 <button type="submit" id="btn-submit-partner" style="background: none; border: none; padding: 0; margin-top: 1rem; cursor: pointer; width: 100%; transition: transform 0.2s;">
                     <div style="background: linear-gradient(135deg, #3a2e26, #1c1511); border-radius: 16px; padding: 1.5rem; text-align: center; border: 1px solid var(--gold); box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
-                        <div style="font-size: 3.5rem; margin-bottom: 0.5rem; filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));">🏺</div>
-                        <div style="color: var(--gold); font-weight: bold; font-size: 1.1rem; letter-spacing: 1px;">사주 단지 전송하기</div>
+                        <div style="margin-bottom: 0.5rem; filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));">
+                            <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="10" y="30" width="80" height="60" fill="#5c3a21" rx="5" />
+                                <rect x="5" y="20" width="90" height="15" fill="#3a2212" rx="2" />
+                                <rect x="45" y="20" width="10" height="70" fill="#d32f2f" />
+                                <circle cx="50" cy="50" r="8" fill="#ffb300" />
+                                <circle cx="50" cy="50" r="4" fill="#d32f2f" />
+                            </svg>
+                        </div>
+                        <div style="color: var(--gold); font-weight: bold; font-size: 1.1rem; letter-spacing: 1px;">사주 단자 전송하기</div>
                         <div style="color: #aaa; font-size: 0.8rem; margin-top: 0.4rem;">운명의 상대 열어보기</div>
                     </div>
                 </button>
@@ -252,13 +260,12 @@
         <!-- Partner Matching Results Section -->
         <section id="partner-matching-results-section" class="screen hidden">
             <div class="header">
-                <h1>💞 최적의 궁합 파트너</h1>
+                <h2 style="font-size: 1.3rem; margin-bottom: 0.5rem; white-space: nowrap;">💞 최적의 궁합 파트너</h2>
                 <p>당신과 가장 잘 맞는 상대입니다</p>
             </div>
             
-            <div id="no-partner-msg" class="hidden" style="text-align: center; padding: 2rem; color: #666;">
-                <p style="font-size: 1.2rem; margin-bottom: 1rem;">운명의 상대가 아직 없습니다.</p>
-                <button class="btn-secondary" id="btn-back-to-main-from-empty">메인으로 돌아가기</button>
+            <div id="no-partner-msg" class="hidden" style="text-align: center; padding: 1rem; margin-bottom: 1rem; color: #fff; background: rgba(255, 100, 100, 0.2); border-radius: 12px; border: 1px solid rgba(255, 100, 100, 0.5);">
+                <p style="font-size: 1rem; margin-bottom: 0;">아직 운명의 상대가 없습니다.<br><small>상대방이 나타나면 아래와 같이 궁합이 분석됩니다!</small></p>
             </div>
 
             <div id="partner-match-card-container">
@@ -289,7 +296,7 @@
                         </div>
                     </div>
                     <div class="card-footer" style="display: flex; flex-direction: column; gap: 0.8rem; padding: 1.5rem;">
-                        <button class="btn-primary" id="btn-open-saju-pot" style="width: 100%; border-radius: 30px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));">운명의 상대 사주단지 열어보기</button>
+                        <button class="btn-primary" id="btn-open-saju-pot" style="width: 100%; border-radius: 30px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));">운명의 상대 사주단자 열어보기</button>
                         <button class="btn-secondary" id="btn-find-next-partner" style="width: 100%; border-radius: 30px;">다른 상대 찾기</button>
                     </div>
                 </div>
@@ -300,7 +307,7 @@
         <!-- Saju Pot Modal -->
         <div id="saju-pot-modal" class="modal hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;">
             <div class="modal-content" style="background: #fff; padding: 2rem; border-radius: 16px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-                <h2 style="color: var(--primary-color); margin-bottom: 0.5rem;">💌 운명의 사주단지</h2>
+                <h2 style="color: var(--primary-color); margin-bottom: 0.5rem;">💌 운명의 사주단자</h2>
                 <p style="color: #666; font-size: 0.9rem; margin-bottom: 2rem;">상대방이 남긴 연락처 정보입니다<br><small style="color: #999;">(※ 향후 유료 결제로 제공될 기능입니다)</small></p>
                 
                 <div style="text-align: left; background: #f9f9f9; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
@@ -341,6 +348,6 @@
             </div>
         </section>
     </div>
-    <script type="module" src="app.js?v=12"></script>
+    <script type="module" src="app.js?v=13"></script>
 </body>
 </html>
