@@ -835,8 +835,9 @@ document.getElementById('partner-form').addEventListener('submit', async (e) => 
     btnSubmit.disabled = true;
 
     try {
+        const customName = document.getElementById('reg-name').value;
         await addDoc(sajuPartners, {
-            name: sess.name,
+            name: customName,
             gender: sess.gender,
             dob: sess.dob,
             time: sess.time,
