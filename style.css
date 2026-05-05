@@ -604,3 +604,7 @@ input:focus {
 .admin-table tr:hover {
     background: rgba(255,255,255,0.03);
 }
+
+.hidden {
+    display: none !important;
+}

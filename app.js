@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy, limit, where } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
 // Firebase configuration (reused from Todac)
 const firebaseConfig = {
@@ -14,6 +14,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const sajuSearches = collection(db, "saju_searches");
+const sajuPartners = collection(db, "saju_partners");
+
+window.currentUserSession = null;
 
 // Saju Data Constants
 const STEMS = ["癸", "甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬"];
@@ -597,6 +600,13 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
     const [hour] = time.split(':').map(Number);
 
     const sajuResult = calculateSaju(year, month, day, hour);
+    window.currentUserSession = {
+        name: name,
+        gender: gender,
+        dob: dob,
+        time: time,
+        sajuResult: sajuResult
+    };
     const analysis = generateAnalysis(sajuResult.primaryElement, sajuResult.dominantSinsal, sajuResult.dominantTenGod);
     const partnerData = findIdealPartner(sajuResult);
 
@@ -793,4 +803,176 @@ document.getElementById('btn-close-admin').addEventListener('click', () => {
     document.getElementById('admin-section').classList.remove('active');
     document.getElementById('input-section').classList.add('active');
     document.getElementById('user-name').value = '';
+});
+
+// --- Partner DB Matching Logic ---
+let currentMatches = [];
+let currentMatchIndex = 0;
+
+document.getElementById('btn-open-partner-registration').addEventListener('click', () => {
+    if (!window.currentUserSession) return;
+    const sess = window.currentUserSession;
+    document.getElementById('result-section').classList.remove('active');
+    document.getElementById('partner-registration-section').classList.add('active');
+    document.getElementById('partner-registration-section').classList.remove('hidden');
+    
+    document.getElementById('reg-name').value = sess.name;
+    document.getElementById('reg-birth').value = `${sess.dob} ${sess.time}`;
+});
+
+document.getElementById('btn-cancel-partner').addEventListener('click', () => {
+    document.getElementById('partner-registration-section').classList.remove('active');
+    document.getElementById('partner-registration-section').classList.add('hidden');
+    document.getElementById('result-section').classList.add('active');
+});
+
+document.getElementById('partner-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!window.currentUserSession) return;
+    
+    const sess = window.currentUserSession;
+    const instagram = document.getElementById('reg-instagram').value;
+    const email = document.getElementById('reg-email').value;
+    
+    const btnSubmit = document.getElementById('btn-submit-partner');
+    const originalText = btnSubmit.textContent;
+    btnSubmit.textContent = "저장 중...";
+    btnSubmit.disabled = true;
+
+    try {
+        await addDoc(sajuPartners, {
+            name: sess.name,
+            gender: sess.gender,
+            dob: sess.dob,
+            time: sess.time,
+            primaryElement: sess.sajuResult.primaryElement,
+            dS: sess.sajuResult.palja.dS,
+            dB: sess.sajuResult.palja.dB,
+            dominantTenGod: sess.sajuResult.dominantTenGod,
+            instagram: instagram,
+            email: email,
+            timestamp: serverTimestamp()
+        });
+        
+        const targetGender = sess.gender === 'male' ? 'female' : 'male';
+        const q = query(sajuPartners, where("gender", "==", targetGender));
+        const snapshot = await getDocs(q);
+        
+        currentMatches = [];
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const compat = calculateFourCompatibilities(sess, data);
+            currentMatches.push({ ...data, compat });
+        });
+        
+        currentMatches.sort((a, b) => b.compat.overall - a.compat.overall);
+        currentMatchIndex = 0;
+        showPartnerResult();
+        
+    } catch (err) {
+        console.error("Partner save/match failed:", err);
+        alert("오류가 발생했습니다. 다시 시도해주세요.");
+    } finally {
+        btnSubmit.textContent = originalText;
+        btnSubmit.disabled = false;
+    }
+});
+
+function calculateFourCompatibilities(mySess, partnerData) {
+    const mySaju = mySess.sajuResult;
+    
+    // 1. 성격 궁합
+    const E_SYNERGY = {
+        "목": {"수": 90, "화": 85, "목": 70, "토": 50, "금": 40},
+        "화": {"목": 90, "토": 85, "화": 70, "금": 50, "수": 40},
+        "토": {"화": 90, "금": 85, "토": 70, "수": 50, "목": 40},
+        "금": {"토": 90, "수": 85, "금": 70, "목": 50, "화": 40},
+        "수": {"금": 90, "목": 85, "수": 70, "화": 50, "토": 40}
+    };
+    let personality = E_SYNERGY[mySaju.primaryElement][partnerData.primaryElement] || 50;
+
+    // 2. 재물 시너지
+    const p1 = mySaju.palja.dS.charCodeAt(0);
+    const p2 = partnerData.dS.charCodeAt(0);
+    let wealth = 60 + ((p1 * p2) % 36); 
+
+    // 3. 속궁합
+    let sexual = 50;
+    const myDb = mySaju.palja.dB;
+    const pDb = partnerData.dB;
+    const YUKHAP = { "子":"丑", "丑":"子", "寅":"亥", "亥":"寅", "卯":"戌", "戌":"卯", "辰":"酉", "酉":"辰", "巳":"申", "申":"巳", "午":"未", "未":"午" };
+    const CHUNG = { "子":"午", "午":"子", "丑":"未", "未":"丑", "寅":"申", "申":"寅", "卯":"酉", "酉":"卯", "辰":"戌", "戌":"辰", "巳":"亥", "亥":"巳" };
+    const SAMHAP = [["亥","卯","未"], ["寅","午","戌"], ["巳","酉","丑"], ["申","子","辰"]];
+    
+    if (YUKHAP[myDb] === pDb) sexual = 98;
+    else if (CHUNG[myDb] === pDb) sexual = 40;
+    else {
+        let isSamhap = false;
+        SAMHAP.forEach(group => {
+            if (group.includes(myDb) && group.includes(pDb)) isSamhap = true;
+        });
+        if (isSamhap) sexual = 85;
+        else sexual = 65 + ((myDb.charCodeAt(0) + pDb.charCodeAt(0)) % 25);
+    }
+
+    let overall = Math.round((personality + wealth + sexual) / 3);
+    return { overall, personality, wealth, sexual };
+}
+
+function showPartnerResult() {
+    document.getElementById('partner-registration-section').classList.remove('active');
+    document.getElementById('partner-registration-section').classList.add('hidden');
+    document.getElementById('partner-matching-results-section').classList.add('active');
+    document.getElementById('partner-matching-results-section').classList.remove('hidden');
+    
+    if (currentMatches.length === 0) {
+        document.getElementById('no-partner-msg').classList.remove('hidden');
+        document.getElementById('partner-match-card-container').classList.add('hidden');
+        return;
+    }
+    
+    document.getElementById('no-partner-msg').classList.add('hidden');
+    document.getElementById('partner-match-card-container').classList.remove('hidden');
+    
+    const match = currentMatches[currentMatchIndex];
+    document.getElementById('match-name').textContent = match.name.substring(0, 1) + 'ㅇㅇ'; 
+    document.getElementById('match-birth').textContent = `${match.dob} ${match.time}`;
+    
+    document.getElementById('match-overall').textContent = match.compat.overall + '%';
+    document.getElementById('match-personality').textContent = match.compat.personality + '%';
+    document.getElementById('match-wealth').textContent = match.compat.wealth + '%';
+    document.getElementById('match-sexual').textContent = match.compat.sexual + '%';
+    
+    document.getElementById('modal-instagram').textContent = match.instagram;
+    document.getElementById('modal-email').textContent = match.email;
+}
+
+document.getElementById('btn-find-next-partner').addEventListener('click', () => {
+    if (currentMatches.length <= 1) {
+        alert("현재 매칭 가능한 다른 상대가 없습니다.");
+        return;
+    }
+    currentMatchIndex++;
+    if (currentMatchIndex >= currentMatches.length) currentMatchIndex = 0;
+    showPartnerResult();
+});
+
+document.getElementById('btn-open-saju-pot').addEventListener('click', () => {
+    document.getElementById('saju-pot-modal').classList.remove('hidden');
+});
+
+document.getElementById('btn-close-modal').addEventListener('click', () => {
+    document.getElementById('saju-pot-modal').classList.add('hidden');
+});
+
+document.getElementById('btn-back-to-main').addEventListener('click', () => {
+    document.getElementById('partner-matching-results-section').classList.remove('active');
+    document.getElementById('partner-matching-results-section').classList.add('hidden');
+    document.getElementById('result-section').classList.add('active');
+});
+
+document.getElementById('btn-back-to-main-from-empty').addEventListener('click', () => {
+    document.getElementById('partner-matching-results-section').classList.remove('active');
+    document.getElementById('partner-matching-results-section').classList.add('hidden');
+    document.getElementById('result-section').classList.add('active');
 });

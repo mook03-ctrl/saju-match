@@ -185,8 +185,8 @@
                 </div>
                 
                 <div class="card-footer" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; padding: 1.5rem 1rem;">
-                    <button class="btn-primary" style="width: 100%; max-width: 250px; padding: 0.8rem; font-size: 0.95rem; border-radius: 30px;" onclick="return false;">운명의 파트너 찾으러가기</button>
-                    <span style="font-size: 0.75rem; color: #888;">(서비스 준비중입니다)</span>
+                    <button class="btn-primary" id="btn-open-partner-registration" style="width: 100%; max-width: 250px; padding: 0.8rem; font-size: 0.95rem; border-radius: 30px;">운명의 파트너 찾으러가기</button>
+                    <span style="font-size: 0.75rem; color: #888;">나와 가장 잘 맞는 상대를 찾아보세요</span>
                 </div>
             </div>
             
@@ -212,6 +212,103 @@
             </footer>
         </section>
 
+        <!-- Partner Registration Section -->
+        <section id="partner-registration-section" class="screen hidden">
+            <div class="header">
+                <h1>당신의 사주 단지를 구성해주세요</h1>
+                <p>매칭을 위한 연락처 정보를 입력해주세요</p>
+            </div>
+            <form id="partner-form" class="form-container">
+                <div class="form-group">
+                    <label>이름</label>
+                    <input type="text" id="reg-name" disabled>
+                </div>
+                <div class="form-group">
+                    <label>생년월일시</label>
+                    <input type="text" id="reg-birth" disabled>
+                </div>
+                <div class="form-group">
+                    <label>인스타그램 ID</label>
+                    <input type="text" id="reg-instagram" placeholder="@instagram_id" required>
+                </div>
+                <div class="form-group">
+                    <label>이메일 주소</label>
+                    <input type="email" id="reg-email" placeholder="example@email.com" required>
+                </div>
+                <button type="submit" class="btn-primary" id="btn-submit-partner">전송하고 운명의 상대 사주단지 열어보기</button>
+                <button type="button" class="btn-secondary" id="btn-cancel-partner" style="margin-top: 1rem;">취소</button>
+            </form>
+        </section>
+
+        <!-- Partner Matching Results Section -->
+        <section id="partner-matching-results-section" class="screen hidden">
+            <div class="header">
+                <h1>💞 최적의 궁합 파트너</h1>
+                <p>당신과 가장 잘 맞는 상대입니다</p>
+            </div>
+            
+            <div id="no-partner-msg" class="hidden" style="text-align: center; padding: 2rem; color: #666;">
+                <p style="font-size: 1.2rem; margin-bottom: 1rem;">운명의 상대가 아직 없습니다.</p>
+                <button class="btn-secondary" id="btn-back-to-main-from-empty">메인으로 돌아가기</button>
+            </div>
+
+            <div id="partner-match-card-container">
+                <div class="lookbook-card" style="margin-top: 1rem;">
+                    <div class="card-content">
+                        <div class="card-text" style="text-align: center;">
+                            <h3 id="match-name" style="font-size: 1.5rem; color: var(--primary-color);">매칭 상대 이름</h3>
+                            <p id="match-birth" style="color: #666; font-size: 0.9rem; margin-bottom: 1.5rem;">생년월일</p>
+                            
+                            <div class="compatibility-stats" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: center;">
+                                <div class="stat-box" style="background: rgba(var(--primary-color-rgb), 0.1); padding: 1rem; border-radius: 12px;">
+                                    <div style="font-size: 0.8rem; color: #888;">전체 평균</div>
+                                    <div id="match-overall" style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">0%</div>
+                                </div>
+                                <div class="stat-box" style="background: rgba(0,0,0,0.03); padding: 1rem; border-radius: 12px;">
+                                    <div style="font-size: 0.8rem; color: #888;">성격 궁합</div>
+                                    <div id="match-personality" style="font-size: 1.5rem; font-weight: 700; color: #444;">0%</div>
+                                </div>
+                                <div class="stat-box" style="background: rgba(0,0,0,0.03); padding: 1rem; border-radius: 12px;">
+                                    <div style="font-size: 0.8rem; color: #888;">재물 시너지</div>
+                                    <div id="match-wealth" style="font-size: 1.5rem; font-weight: 700; color: #444;">0%</div>
+                                </div>
+                                <div class="stat-box" style="background: rgba(0,0,0,0.03); padding: 1rem; border-radius: 12px;">
+                                    <div style="font-size: 0.8rem; color: #888;">속궁합</div>
+                                    <div id="match-sexual" style="font-size: 1.5rem; font-weight: 700; color: #444;">0%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer" style="display: flex; flex-direction: column; gap: 0.8rem; padding: 1.5rem;">
+                        <button class="btn-primary" id="btn-open-saju-pot" style="width: 100%; border-radius: 30px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));">운명의 상대 사주단지 열어보기</button>
+                        <button class="btn-secondary" id="btn-find-next-partner" style="width: 100%; border-radius: 30px;">다른 상대 찾기</button>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-secondary" id="btn-back-to-main" style="margin-top: 2rem;">돌아가기</button>
+        </section>
+
+        <!-- Saju Pot Modal -->
+        <div id="saju-pot-modal" class="modal hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+            <div class="modal-content" style="background: #fff; padding: 2rem; border-radius: 16px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <h2 style="color: var(--primary-color); margin-bottom: 0.5rem;">💌 운명의 사주단지</h2>
+                <p style="color: #666; font-size: 0.9rem; margin-bottom: 2rem;">상대방이 남긴 연락처 정보입니다<br><small style="color: #999;">(※ 향후 유료 결제로 제공될 기능입니다)</small></p>
+                
+                <div style="text-align: left; background: #f9f9f9; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <div style="margin-bottom: 1rem;">
+                        <label style="font-size: 0.8rem; color: #888;">인스타그램 ID</label>
+                        <div id="modal-instagram" style="font-size: 1.1rem; font-weight: bold; color: #333;">@instagram</div>
+                    </div>
+                    <div>
+                        <label style="font-size: 0.8rem; color: #888;">이메일 주소</label>
+                        <div id="modal-email" style="font-size: 1.1rem; font-weight: bold; color: #333;">email@example.com</div>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" id="btn-close-modal" style="width: 100%; border-radius: 30px;">닫기</button>
+            </div>
+        </div>
+
         <!-- Admin Section -->
         <section id="admin-section" class="screen">
             <div class="header">
@@ -235,6 +332,6 @@
             </div>
         </section>
     </div>
-    <script type="module" src="app.js?v=9"></script>
+    <script type="module" src="app.js?v=10"></script>
 </body>
 </html>
