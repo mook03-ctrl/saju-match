@@ -551,7 +551,7 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
         const basePrompt = "Casual natural photorealistic snapshot, bright soft natural lighting, no prominent cheekbones, not a fashion model";
         const shot = PROMPT_VIBES[vibe].shot;
         const vDesc = PROMPT_VIBES[vibe].desc;
-        const prompt = `${shot} of a young 20s ${genderNoun}, ${basePrompt}, ${PROMPT_ELEMENTS[element]}, ${PROMPT_TENGODS[tengod]}, ${vDesc}, highly detailed, 8k resolution`;
+        const prompt = `${shot} of a young 20s ${genderNoun}, ${basePrompt}, ${PROMPT_ELEMENTS[element]}, ${PROMPT_TENGODS[tengod]}, ${vDesc}, highly detailed, 2k resolution`;
         return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=600&height=750&nologo=true&seed=${seed}`;
     }
 
