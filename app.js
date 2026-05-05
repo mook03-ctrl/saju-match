@@ -383,12 +383,12 @@ function calculateLoveScore(sajuResult, gender) {
     };
     if (HONG_MAP[dS] && HONG_MAP[dS].includes(cYearBranch)) score += 1.0;
 
-    // 충(沖) 로직 (-1.5점)
+    // 충(沖) 로직 (+0.5점)
     const CHUNG_MAP = {
         "子":"午", "午":"子", "丑":"未", "未":"丑", "寅":"申", "申":"寅",
         "卯":"酉", "酉":"卯", "辰":"戌", "戌":"辰", "巳":"亥", "亥":"巳"
     };
-    if (CHUNG_MAP[dB] === cYearBranch) score -= 1.5;
+    if (CHUNG_MAP[dB] === cYearBranch) score += 0.5;
 
     return Math.max(0.0, Math.min(score, 5.0));
 }
@@ -448,7 +448,7 @@ function calculateMonthLoveScore(sajuResult, gender) {
         "子":"午", "午":"子", "丑":"未", "未":"丑", "寅":"申", "申":"寅",
         "卯":"酉", "酉":"卯", "辰":"戌", "戌":"辰", "巳":"亥", "亥":"巳"
     };
-    if (CHUNG_MAP[dB] === cMonthBranch) score -= 1.5;
+    if (CHUNG_MAP[dB] === cMonthBranch) score += 0.5;
 
     return Math.max(0.0, Math.min(score, 5.0));
 }
