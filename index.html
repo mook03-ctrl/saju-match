@@ -117,9 +117,15 @@
                             <!-- JS will populate progress bars -->
                         </div>
                         <div class="love-fortune-section" id="love-fortune-section">
-                            <h4>올해 사랑을 이룰 가능성</h4>
-                            <div class="hearts" id="love-hearts">
-                                <!-- JS will populate hearts -->
+                            <div class="love-probabilities" style="display: flex; gap: 1rem; text-align: center; justify-content: center; margin-bottom: 1rem;">
+                                <div class="love-box" style="flex: 1; padding: 1rem; background: rgba(255,255,255,0.5); border-radius: 12px;">
+                                    <h4 style="margin-top: 0; font-size: 0.9rem; color: #ff4b4b;">이번 달 연애운</h4>
+                                    <div class="hearts" id="month-love-hearts" style="margin-bottom: 0;"></div>
+                                </div>
+                                <div class="love-box" style="flex: 1; padding: 1rem; background: rgba(255,255,255,0.5); border-radius: 12px;">
+                                    <h4 style="margin-top: 0; font-size: 0.9rem; color: #ff4b4b;">올해 연애운</h4>
+                                    <div class="hearts" id="year-love-hearts" style="margin-bottom: 0;"></div>
+                                </div>
                             </div>
                             <p class="love-comment" id="love-comment"></p>
                         </div>
@@ -229,6 +235,6 @@
             </div>
         </section>
     </div>
-    <script type="module" src="app.js?v=7"></script>
+    <script type="module" src="app.js?v=8"></script>
 </body>
 </html>
