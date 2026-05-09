@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy, limit, where } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy, limit, where, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
 // Firebase configuration (reused from Todac)
 const firebaseConfig = {
@@ -612,9 +612,8 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
 
     const gPrefix = gender === 'male' ? 'm' : 'f';
     const pPrefix = gender === 'male' ? 'f' : 'm'; 
-    
-    const mainSrc = `assets/${gPrefix}_face.png`;
-    const partnerSrc = `assets/${pPrefix}_face.png`;
+    const mainSrc = `assets/${gPrefix}_${sajuResult.primaryElement}_${sajuResult.dominantTenGod}_${sajuResult.vibeGroup}.png`;
+    const partnerSrc = `assets/${pPrefix}_${partnerData.primaryElement}_${partnerData.dominantTenGod}_${partnerData.vibeGroup}.png`;
 
     const fallbackFilters = {
         "비겁": "contrast(1.1) brightness(1.05)",
@@ -974,4 +973,81 @@ document.getElementById('btn-back-to-main').addEventListener('click', () => {
     document.getElementById('partner-matching-results-section').classList.remove('active');
     document.getElementById('partner-matching-results-section').classList.add('hidden');
     document.getElementById('result-section').classList.add('active');
+});
+
+// --- Admin Section Logic ---
+window.loadAdminData = async function() {
+    const listContainer = document.getElementById('admin-list-container');
+    const countSpan = document.getElementById('admin-count');
+    listContainer.innerHTML = '<p style="text-align:center;">데이터를 불러오는 중입니다...</p>';
+    
+    try {
+        const querySnapshot = await getDocs(sajuPartners);
+        const docs = [];
+        querySnapshot.forEach((doc) => {
+            docs.push({ id: doc.id, ...doc.data() });
+        });
+        
+        docs.reverse();
+        
+        countSpan.textContent = `총 ${docs.length}명`;
+        
+        if (docs.length === 0) {
+            listContainer.innerHTML = '<p style="text-align:center; color:#888;">등록된 사주 단자가 없습니다.</p>';
+            return;
+        }
+        
+        listContainer.innerHTML = '';
+        docs.forEach(d => {
+            const div = document.createElement('div');
+            div.style.cssText = 'background: #f9f9f9; padding: 1rem; border-radius: 8px; border: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;';
+            
+            const info = document.createElement('div');
+            info.innerHTML = `
+                <div style="font-weight: bold; color: #333; margin-bottom: 0.3rem;">${d.name} <span style="font-size: 0.8rem; color: #666; font-weight: normal;">(${d.gender === 'male' ? '남' : '여'})</span></div>
+                <div style="font-size: 0.8rem; color: #666; margin-bottom: 0.2rem;">${d.dob} ${d.time} / ${d.primaryElement} ${d.dominantTenGod}</div>
+                <div style="font-size: 0.8rem; color: #888;">${d.instagram || ''} | ${d.email || ''}</div>
+            `;
+            
+            const delBtn = document.createElement('button');
+            delBtn.textContent = '삭제';
+            delBtn.style.cssText = 'background: #ff4d4d; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem;';
+            delBtn.onclick = () => deletePartner(d.id, div);
+            
+            div.appendChild(info);
+            div.appendChild(delBtn);
+            listContainer.appendChild(div);
+        });
+    } catch (err) {
+        console.error(err);
+        listContainer.innerHTML = '<p style="text-align:center; color:red;">데이터를 불러오는 데 실패했습니다.</p>';
+    }
+};
+
+window.deletePartner = async function(id, el) {
+    if(!confirm('정말 삭제하시겠습니까?')) return;
+    try {
+        await deleteDoc(doc(db, "saju_partners", id));
+        el.remove();
+        alert('삭제되었습니다.');
+        loadAdminData(); // Refresh count
+    } catch(err) {
+        console.error(err);
+        alert('삭제에 실패했습니다.');
+    }
+};
+
+document.getElementById('btn-admin-refresh').addEventListener('click', () => {
+    loadAdminData();
+});
+
+document.getElementById('btn-admin-logout').addEventListener('click', () => {
+    document.getElementById('admin-section').classList.remove('active');
+    document.getElementById('admin-section').classList.add('hidden');
+    document.getElementById('input-section').classList.add('active');
+    
+    // Clear the form
+    document.getElementById('user-name').value = '';
+    document.getElementById('user-dob').value = '';
+    document.getElementById('user-time').value = '';
 });
