@@ -561,6 +561,13 @@ document.getElementById('user-time').addEventListener('input', function(e) {
     e.target.value = val;
 });
 
+// 관리자 로그인 시 required 해제
+document.getElementById('user-name').addEventListener('input', (e) => {
+    const isAdmin = e.target.value === '관리자170924';
+    document.getElementById('user-dob').required = !isAdmin;
+    document.getElementById('user-time').required = !isAdmin;
+});
+
 // UI Flow
 document.getElementById('saju-form').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -570,15 +577,15 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
     const dob = document.getElementById('user-dob').value;
     const time = document.getElementById('user-time').value;
 
-    if(!name || !dob || !time) return;
-
-    // 관리자 진입 인터셉트
     if (name === "관리자170924") {
         document.getElementById('input-section').classList.remove('active');
+        document.getElementById('admin-section').classList.remove('hidden');
         document.getElementById('admin-section').classList.add('active');
         loadAdminData();
         return;
     }
+
+    if(!name || !dob || !time) return;
 
     // 파이어베이스에 검색 기록 저장
     try {
