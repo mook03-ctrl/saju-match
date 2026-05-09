@@ -983,7 +983,7 @@ document.getElementById('btn-back-to-main').addEventListener('click', () => {
 });
 
 // --- Admin Section Logic ---
-let currentAdminTab = 'searches'; // 'searches' or 'partners'
+let currentAdminTab = 'partners'; // 'searches' or 'partners'
 
 window.loadAdminData = async function() {
     const searchesContainer = document.getElementById('admin-list-searches');
