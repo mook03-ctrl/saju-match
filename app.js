@@ -612,8 +612,8 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
 
     const gPrefix = gender === 'male' ? 'm' : 'f';
     const pPrefix = gender === 'male' ? 'f' : 'm'; 
-    const mainSrc = `assets/${gPrefix}_${sajuResult.primaryElement}_${sajuResult.dominantTenGod}_${sajuResult.vibeGroup}.png`;
-    const partnerSrc = `assets/${pPrefix}_${partnerData.primaryElement}_${partnerData.dominantTenGod}_${partnerData.vibeGroup}.png`;
+    const mainSrc = `assets/${gPrefix}_face.png`;
+    const partnerSrc = `assets/${pPrefix}_face.png`;
 
     const fallbackFilters = {
         "비겁": "contrast(1.1) brightness(1.05)",
