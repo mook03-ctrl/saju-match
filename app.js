@@ -648,7 +648,6 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
           urls: [
             `${mainFolder}/face1.jpg`,
             `${mainFolder}/face.jpg`,
-            `assets/${gPrefix}_face.png`,
             `assets/${gPrefix}_face_${sajuResult.dominantTenGod}.jpg`
           ], 
           filter: fallbackFilters[sajuResult.dominantTenGod] 
@@ -657,7 +656,6 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
           urls: [
             `${partnerFolder}/face1.jpg`,
             `${partnerFolder}/face.jpg`,
-            `assets/${pPrefix}_face.png`,
             `assets/${pPrefix}_face_${partnerData.dominantTenGod}.jpg`
           ], 
           filter: fallbackFilters[partnerData.dominantTenGod] 
