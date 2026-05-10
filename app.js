@@ -1013,7 +1013,7 @@ window.loadAdminData = async function() {
         countSpan.textContent = `총 ${docs.length}명`;
         
         if (docs.length === 0) {
-            container.innerHTML = '<p style="text-align:center; color:#888;">등록된 데이터가 없습니다.</p>';
+            container.innerHTML = `<p style="text-align:center; color:#888;">등록된 데이터가 없습니다. (DB에 문서가 0개입니다.)</p>`;
             return;
         }
         
@@ -1055,7 +1055,7 @@ window.loadAdminData = async function() {
         });
     } catch (err) {
         console.error(err);
-        container.innerHTML = '<p style="text-align:center; color:red;">데이터를 불러오는 데 실패했습니다.</p>';
+        container.innerHTML = `<p style="text-align:center; color:red;">데이터를 불러오는 데 실패했습니다.<br><small>${err.message}</small></p>`;
     }
 };
 
