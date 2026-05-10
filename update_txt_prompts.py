@@ -58,7 +58,7 @@ for gender_eng, gender_kr, gender_desc in genders:
         
         prompt += "ABSOLUTELY NO earrings, NO necklaces, NO accessories on the man. "
             
-        prompt += "2k resolution, photorealistic, cinematic lighting, highly detailed. --ar 4:5. Ensure final output format is JPG."
+        prompt += "2k resolution, photorealistic, cinematic lighting, highly detailed. --ar 4:5. Ensure final output format is JPG or PNG."
         
         txt_path = os.path.join(folder_path, "외모설명.txt")
         
@@ -80,7 +80,7 @@ for gender_eng, gender_kr, gender_desc in genders:
   동일한 비율(4:5), 동일한 분위기(자연스럽고 부드러운 일상 컷)로 사진을 생성할 수 있습니다.
 - 배경(The setting is ~) 부분을 원하시는 장소(예: modern office, beautiful beach 등)로 
   자유롭게 수정하셔도 좋습니다.
-- 🚨 중요: 생성된 이미지를 다운로드 받아 폴더에 넣으실 때 파일명을 반드시 `face1.jpg` (또는 `face.jpg`)로, 파일 포맷(확장자)을 **JPG**로 맞추어 저장해주세요!
+- 🚨 중요: 생성된 이미지를 다운로드 받아 폴더에 넣으실 때 파일명을 `face1` (또는 `face`)로 지정하시고, 파일 포맷은 **JPG 또는 PNG**로 저장해주세요! (예: face1.png, face1.jpg)
 """
         with open(txt_path, 'w', encoding='utf-8') as f:
             f.write(content)

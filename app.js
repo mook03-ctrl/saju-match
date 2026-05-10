@@ -646,7 +646,9 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
     const imgsInfo = [
         { el: 'main', 
           urls: [
+            `${mainFolder}/face1.png`,
             `${mainFolder}/face1.jpg`,
+            `${mainFolder}/face.png`,
             `${mainFolder}/face.jpg`,
             `assets/${gPrefix}_face_${sajuResult.dominantTenGod}.jpg`
           ], 
@@ -654,7 +656,9 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
         },
         { el: 'partner', 
           urls: [
+            `${partnerFolder}/face1.png`,
             `${partnerFolder}/face1.jpg`,
+            `${partnerFolder}/face.png`,
             `${partnerFolder}/face.jpg`,
             `assets/${pPrefix}_face_${partnerData.dominantTenGod}.jpg`
           ], 
