@@ -624,6 +624,16 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
     const mainSrc = `assets/${gPrefix}_face.png`;
     const partnerSrc = `assets/${pPrefix}_face.png`;
 
+    let mainVibe = "noble";
+    if (sajuResult.sinsalList.includes("도화살") || sajuResult.sinsalList.includes("홍염살") || sajuResult.dominantTenGod === "식상" || sajuResult.dominantTenGod === "재성") {
+        mainVibe = "charm";
+    }
+    
+    let partnerVibe = "noble";
+    if (partnerData.dominantTenGod === "식상" || partnerData.dominantTenGod === "재성") {
+        partnerVibe = "charm";
+    }
+
     const fallbackFilters = {
         "비겁": "contrast(1.1) brightness(1.05)",
         "식상": "brightness(1.15) saturate(1.2)",
@@ -633,8 +643,8 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
     };
 
     const imgsInfo = [
-        { el: 'main', src: mainSrc, fallback: `assets/appearance_types/${gKr}/${sajuResult.dominantTenGod}/face.jpg`, filter: fallbackFilters[sajuResult.dominantTenGod] },
-        { el: 'partner', src: partnerSrc, fallback: `assets/appearance_types/${pKr}/${partnerData.dominantTenGod}/face.jpg`, filter: fallbackFilters[partnerData.dominantTenGod] }
+        { el: 'main', src: mainSrc, fallback: `assets/appearance_types/${gKr}/${sajuResult.primaryElement}_${sajuResult.dominantTenGod}_${mainVibe}/face.jpg`, filter: fallbackFilters[sajuResult.dominantTenGod] },
+        { el: 'partner', src: partnerSrc, fallback: `assets/appearance_types/${pKr}/${partnerData.primaryElement}_${partnerData.dominantTenGod}_${partnerVibe}/face.jpg`, filter: fallbackFilters[partnerData.dominantTenGod] }
     ];
 
     let loadedSrcs = {};

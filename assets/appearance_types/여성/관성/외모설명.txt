@@ -1,9 +1,0 @@
-=== 관성 (공무원/아나운서상) (여성) ===
-
-외모 특징: 선이 단정하고 반듯하게 정리되어 있어 신뢰감을 주는 정석 미남/미녀의 느낌. 클래식하고 신뢰감 있는 얼굴입니다.
-
-AI 이미지 생성 프롬프트 예시:
-straight tidy facial lines, trustworthy and classic beautiful look, gentle smile, feminine
-
-사용법: 이 폴더에 새로운 사진을 넣으실 때는 이름을 반드시 'face.jpg'로 변경해 주세요.
-그러면 웹사이트에서 자동으로 이 사진을 불러옵니다.
