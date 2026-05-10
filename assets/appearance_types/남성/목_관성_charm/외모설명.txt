@@ -1,12 +1,18 @@
-=== 남성 / 목 / 관성 / charm ===
+[목 + 관성 + charm] 외모 특징 및 생성 프롬프트
 
-[오행 특징 - 목]
-키가 크고 길게 뻗은 느낌, 청순하고 자연스러운 분위기
+1. 체형/얼굴형 (오행 - 목): slender and well-proportioned body, slightly long natural face shape
+2. 이목구비/표정 (십성 - 관성): straight tidy facial lines, trustworthy and classic look
+3. 전체적인 분위기 (charm): subtle attractive charm, slightly alluring but friendly aura
 
-[십성 특징 - 관성]
-단정하고 반듯하며 신뢰감을 주는 클래식한 미남/미녀 인상
+=======================================================
+[ 미드저니 / ChatGPT 등 AI 이미지 생성용 복사/붙여넣기 프롬프트 ]
+=======================================================
 
-[분위기 특징 - charm]
-치명적이고 매혹적인 시선, 섹시하고 눈길을 끄는 매력
+A highly realistic, photorealistic portrait of a young Korean man in his late 20s to early 30s. He has a slender and well-proportioned body, slightly long natural face shape. He exhibits a straight tidy facial lines, trustworthy and classic look and a subtle attractive charm, slightly alluring but friendly aura. He is wearing stylish but comfortable daily spring clothing (casual wear). The setting is a bright cozy stylish cafe OR beautiful sunny outdoor park. Shot type: Medium full shot, thigh-up portrait, slightly zoomed in. IMPORTANT: Do NOT use cold high-fashion model expressions. NO harsh cheekbones, NO angry or stern looks. The vibe must be pure, natural, friendly, and highly approachable. ABSOLUTELY NO earrings, NO necklaces, NO accessories on the man. 2k resolution, photorealistic, cinematic lighting, highly detailed.
 
-사용법: 이 폴더에 새로운 사진을 넣으실 때는 이름을 'face.jpg'로 변경해 주세요.
+=======================================================
+* 사용 팁: 
+- 이 텍스트를 복사해서 AI에 붙여넣기만 하면 지금까지 만든 샘플과 동일한 2K 화질, 
+  동일한 분위기(자연스럽고 부드러운 일상 컷)로 사진을 생성할 수 있습니다.
+- 배경(The setting is ~) 부분을 원하시는 장소(예: modern office, beautiful beach 등)로 
+  자유롭게 수정하셔도 좋습니다.

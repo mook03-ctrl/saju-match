@@ -1,12 +1,18 @@
-=== 여성 / 금 / 비겁 / charm ===
+[금 + 비겁 + charm] 외모 특징 및 생성 프롬프트
 
-[오행 특징 - 금]
-직선적이고 마른 체형, 입체적이고 차가운 도시적인 분위기
+1. 체형/얼굴형 (오행 - 금): slim body, clear and neat facial features
+2. 이목구비/표정 (십성 - 비겁): confident but very friendly look with soft natural facial lines
+3. 전체적인 분위기 (charm): subtle attractive charm, slightly alluring but friendly aura
 
-[십성 특징 - 비겁]
-선이 강하고 자기주장이 뚜렷한 자신감 넘치는 인상
+=======================================================
+[ 미드저니 / ChatGPT 등 AI 이미지 생성용 복사/붙여넣기 프롬프트 ]
+=======================================================
 
-[분위기 특징 - charm]
-치명적이고 매혹적인 시선, 섹시하고 눈길을 끄는 매력
+A highly realistic, photorealistic portrait of a young Korean woman in her late 20s to early 30s. She has a slim body, clear and neat facial features. She exhibits a confident but very friendly look with soft natural facial lines and a subtle attractive charm, slightly alluring but friendly aura. She is wearing stylish but comfortable daily spring clothing (casual wear). The setting is a bright cozy stylish cafe OR beautiful sunny outdoor park. Shot type: Medium full shot, thigh-up portrait, slightly zoomed in. IMPORTANT: Do NOT use cold high-fashion model expressions. NO harsh cheekbones, NO angry or stern looks. The vibe must be pure, natural, friendly, and highly approachable. 2k resolution, photorealistic, cinematic lighting, highly detailed.
 
-사용법: 이 폴더에 새로운 사진을 넣으실 때는 이름을 'face.jpg'로 변경해 주세요.
+=======================================================
+* 사용 팁: 
+- 이 텍스트를 복사해서 AI에 붙여넣기만 하면 지금까지 만든 샘플과 동일한 2K 화질, 
+  동일한 분위기(자연스럽고 부드러운 일상 컷)로 사진을 생성할 수 있습니다.
+- 배경(The setting is ~) 부분을 원하시는 장소(예: modern office, beautiful beach 등)로 
+  자유롭게 수정하셔도 좋습니다.
