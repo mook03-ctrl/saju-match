@@ -622,12 +622,12 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
     const gKr = gender === 'male' ? '남성' : '여성';
     const pKr = gender === 'male' ? '여성' : '남성';
 
-    let mainVibe = "noble";
-    if (sajuResult.sinsalList.includes("도화살") || sajuResult.sinsalList.includes("홍염살") || sajuResult.dominantTenGod === "식상" || sajuResult.dominantTenGod === "재성") {
+    let mainVibe = sajuResult.vibeGroup || "noble";
+    if (sajuResult.dominantTenGod === "식상" || sajuResult.dominantTenGod === "재성") {
         mainVibe = "charm";
     }
     
-    let partnerVibe = "noble";
+    let partnerVibe = partnerData.vibeGroup || "noble";
     if (partnerData.dominantTenGod === "식상" || partnerData.dominantTenGod === "재성") {
         partnerVibe = "charm";
     }
