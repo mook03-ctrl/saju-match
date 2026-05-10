@@ -232,7 +232,11 @@
                 </div>
                 <div class="form-group">
                     <label>인스타그램 ID</label>
-                    <input type="text" id="reg-instagram" placeholder="@instagram_id" required>
+                    <input type="text" id="reg-instagram" placeholder="@instagram_id">
+                </div>
+                <div class="form-group">
+                    <label>기타 연락처</label>
+                    <input type="text" id="reg-other-contact" placeholder="카카오톡 ID 등 기타 연락처">
                 </div>
                 <div class="form-group">
                     <label>이메일 주소</label>
@@ -357,6 +361,10 @@
                         <label>인스타그램 ID</label>
                         <input type="text" id="edit-instagram" style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 8px;">
                     </div>
+                    <div class="input-group" style="margin-bottom: 1rem;">
+                        <label>기타 연락처</label>
+                        <input type="text" id="edit-other-contact" style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 8px;">
+                    </div>
                     <div class="input-group" style="margin-bottom: 1.5rem;">
                         <label>이메일</label>
                         <input type="email" id="edit-email" style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 8px;">
@@ -381,6 +389,10 @@
                         <label style="font-size: 0.8rem; color: #888;">인스타그램 ID</label>
                         <div id="modal-instagram" style="font-size: 1.1rem; font-weight: bold; color: #333;">@instagram</div>
                     </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="font-size: 0.8rem; color: #888;">기타 연락처</label>
+                        <div id="modal-other-contact" style="font-size: 1.1rem; font-weight: bold; color: #333;">없음</div>
+                    </div>
                     <div>
                         <label style="font-size: 0.8rem; color: #888;">이메일 주소</label>
                         <div id="modal-email" style="font-size: 1.1rem; font-weight: bold; color: #333;">email@example.com</div>
@@ -392,6 +404,6 @@
         </div>
 
     </div>
-    <script type="module" src="app.js?v=23"></script>
+    <script type="module" src="app.js?v=24"></script>
 </body>
 </html>

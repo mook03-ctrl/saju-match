@@ -826,6 +826,7 @@ document.getElementById('partner-form').addEventListener('submit', async (e) => 
     
     const sess = window.currentUserSession;
     const instagram = document.getElementById('reg-instagram').value;
+    const otherContact = document.getElementById('reg-other-contact').value;
     const email = document.getElementById('reg-email').value;
     
     const btnSubmit = document.getElementById('btn-submit-partner');
@@ -845,6 +846,7 @@ document.getElementById('partner-form').addEventListener('submit', async (e) => 
             dB: sess.sajuResult.palja.dB,
             dominantTenGod: sess.sajuResult.dominantTenGod,
             instagram: instagram,
+            otherContact: otherContact,
             email: email,
             timestamp: serverTimestamp()
         });
@@ -932,6 +934,7 @@ function showPartnerResult() {
         document.getElementById('match-sexual').textContent = '0%';
         
         document.getElementById('modal-instagram').textContent = "아직 등록되지 않았습니다";
+        document.getElementById('modal-other-contact').textContent = "아직 등록되지 않았습니다";
         document.getElementById('modal-email').textContent = "아직 등록되지 않았습니다";
         return;
     }
@@ -947,8 +950,9 @@ function showPartnerResult() {
     document.getElementById('match-wealth').textContent = match.compat.wealth + '%';
     document.getElementById('match-sexual').textContent = match.compat.sexual + '%';
     
-    document.getElementById('modal-instagram').textContent = match.instagram;
-    document.getElementById('modal-email').textContent = match.email;
+    document.getElementById('modal-instagram').textContent = match.instagram || '없음';
+    document.getElementById('modal-other-contact').textContent = match.otherContact || '없음';
+    document.getElementById('modal-email').textContent = match.email || '없음';
 }
 
 document.getElementById('btn-find-next-partner').addEventListener('click', () => {
@@ -1021,7 +1025,7 @@ window.loadAdminData = async function() {
                 <div style="font-size: 0.8rem; color: #666; margin-bottom: 0.2rem;">${d.dob} ${d.time} ${d.primaryElement ? '/ ' + d.primaryElement + ' ' + d.dominantTenGod : ''}</div>
             `;
             if (currentAdminTab === 'partners') {
-                infoHTML += `<div style="font-size: 0.8rem; color: #888;">${d.instagram || ''} | ${d.email || ''}</div>`;
+                infoHTML += `<div style="font-size: 0.8rem; color: #888;">${d.instagram || '인스타없음'} | ${d.otherContact || '기타연락처없음'} | ${d.email || ''}</div>`;
             }
             info.innerHTML = infoHTML;
             
@@ -1078,6 +1082,7 @@ window.openEditModal = function(id, data, tab) {
     if (tab === 'partners') {
         document.getElementById('edit-partner-fields').classList.remove('hidden');
         document.getElementById('edit-instagram').value = data.instagram || '';
+        document.getElementById('edit-other-contact').value = data.otherContact || '';
         document.getElementById('edit-email').value = data.email || '';
     } else {
         document.getElementById('edit-partner-fields').classList.add('hidden');
@@ -1101,6 +1106,7 @@ document.getElementById('btn-edit-save').addEventListener('click', async () => {
     
     if (tab === 'partners') {
         updateData.instagram = document.getElementById('edit-instagram').value;
+        updateData.otherContact = document.getElementById('edit-other-contact').value;
         updateData.email = document.getElementById('edit-email').value;
     }
     
