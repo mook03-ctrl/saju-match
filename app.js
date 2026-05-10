@@ -760,51 +760,6 @@ document.getElementById('download-btn').addEventListener('click', () => {
     });
 });
 
-// --- Admin Section Logic ---
-async function loadAdminData() {
-    const tbody = document.getElementById('admin-table-body');
-    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">데이터를 불러오는 중입니다...</td></tr>';
-    
-    try {
-        const q = query(sajuSearches, orderBy("timestamp", "desc"), limit(100));
-        const querySnapshot = await getDocs(q);
-        tbody.innerHTML = '';
-        
-        if (querySnapshot.empty) {
-            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">검색 기록이 없습니다.</td></tr>';
-            return;
-        }
-
-        querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            const tr = document.createElement('tr');
-            
-            let dateStr = "알 수 없음";
-            if (data.timestamp) {
-                const date = data.timestamp.toDate();
-                dateStr = date.toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-            }
-            
-            const dobFormat = `${data.dob} / ${data.time}`;
-            
-            tr.innerHTML = `
-                <td>${data.name.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</td>
-                <td>${dobFormat}</td>
-                <td>${dateStr}</td>
-            `;
-            tbody.appendChild(tr);
-        });
-    } catch (e) {
-        console.error(e);
-        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:red;">오류 발생: ${e.message}</td></tr>`;
-    }
-}
-
-document.getElementById('btn-close-admin').addEventListener('click', () => {
-    document.getElementById('admin-section').classList.remove('active');
-    document.getElementById('input-section').classList.add('active');
-    document.getElementById('user-name').value = '';
-});
 
 // --- Partner DB Matching Logic ---
 let currentMatches = [];
