@@ -1,0 +1,9 @@
+=== 인성 (동안과 청순) (남성) ===
+
+외모 특징: 부드럽고 어려 보이며 사람들의 보호본능을 자극하는 순한 눈빛. 청순하고 순수한 인상입니다.
+
+AI 이미지 생성 프롬프트 예시:
+soft innocent eyes, pure and gentle look, very friendly expression, masculine
+
+사용법: 이 폴더에 새로운 사진을 넣으실 때는 이름을 반드시 'face.jpg'로 변경해 주세요.
+그러면 웹사이트에서 자동으로 이 사진을 불러옵니다.
