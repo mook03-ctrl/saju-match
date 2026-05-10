@@ -59,7 +59,7 @@ for gender_eng, gender_kr, gender_desc in genders:
         if gender_eng == "male":
             prompt += "ABSOLUTELY NO earrings, NO necklaces, NO accessories on the man. "
             
-        prompt += "2k resolution, photorealistic, cinematic lighting, highly detailed."
+        prompt += "2k resolution, photorealistic, cinematic lighting, highly detailed. --ar 4:5"
         
         # Read existing file to keep Korean description, or we can just prepend/append it.
         # It's better to just write a clean new file with both.

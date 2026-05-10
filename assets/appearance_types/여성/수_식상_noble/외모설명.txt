@@ -8,7 +8,7 @@
 [ 미드저니 / ChatGPT 등 AI 이미지 생성용 복사/붙여넣기 프롬프트 ]
 =======================================================
 
-A highly realistic, photorealistic portrait of a young Korean woman in her late 20s to early 30s. She has a soft and slightly curvy body, round face with big dewy eyes. She exhibits a youthful and cute face, highly expressive, bright natural smile and a luxurious noble aura, high-class elegant vibe, clean impression. She is wearing stylish but comfortable daily spring clothing (casual wear). The setting is a bright cozy stylish cafe OR beautiful sunny outdoor park. Shot type: Medium full shot, thigh-up portrait, slightly zoomed in. IMPORTANT: Do NOT use cold high-fashion model expressions. NO harsh cheekbones, NO angry or stern looks. The vibe must be pure, natural, friendly, and highly approachable. 2k resolution, photorealistic, cinematic lighting, highly detailed.
+A highly realistic, photorealistic portrait of a young Korean woman in her late 20s to early 30s. She has a soft and slightly curvy body, round face with big dewy eyes. She exhibits a youthful and cute face, highly expressive, bright natural smile and a luxurious noble aura, high-class elegant vibe, clean impression. She is wearing stylish but comfortable daily spring clothing (casual wear). The setting is a bright cozy stylish cafe OR beautiful sunny outdoor park. Shot type: Medium full shot, thigh-up portrait, slightly zoomed in. IMPORTANT: Do NOT use cold high-fashion model expressions. NO harsh cheekbones, NO angry or stern looks. The vibe must be pure, natural, friendly, and highly approachable. 2k resolution, photorealistic, cinematic lighting, highly detailed. --ar 4:5
 
 =======================================================
 * 사용 팁: 

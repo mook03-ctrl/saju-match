@@ -619,8 +619,21 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
 
     const gPrefix = gender === 'male' ? 'm' : 'f';
     const pPrefix = gender === 'male' ? 'f' : 'm'; 
-    const mainSrc = `assets/${gPrefix}_face.png`;
-    const partnerSrc = `assets/${pPrefix}_face.png`;
+    const gKr = gender === 'male' ? '남성' : '여성';
+    const pKr = gender === 'male' ? '여성' : '남성';
+
+    let mainVibe = "noble";
+    if (sajuResult.sinsalList.includes("도화살") || sajuResult.sinsalList.includes("홍염살") || sajuResult.dominantTenGod === "식상" || sajuResult.dominantTenGod === "재성") {
+        mainVibe = "charm";
+    }
+    
+    let partnerVibe = "noble";
+    if (partnerData.dominantTenGod === "식상" || partnerData.dominantTenGod === "재성") {
+        partnerVibe = "charm";
+    }
+
+    const mainFolder = `assets/appearance_types/${gKr}/${sajuResult.primaryElement}_${sajuResult.dominantTenGod}_${mainVibe}`;
+    const partnerFolder = `assets/appearance_types/${pKr}/${partnerData.primaryElement}_${partnerData.dominantTenGod}_${partnerVibe}`;
 
     const fallbackFilters = {
         "비겁": "contrast(1.1) brightness(1.05)",
@@ -631,8 +644,24 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
     };
 
     const imgsInfo = [
-        { el: 'main', src: mainSrc, fallback: `assets/${gPrefix}_face_${sajuResult.dominantTenGod}.jpg`, filter: fallbackFilters[sajuResult.dominantTenGod] },
-        { el: 'partner', src: partnerSrc, fallback: `assets/${pPrefix}_face_${partnerData.dominantTenGod}.jpg`, filter: fallbackFilters[partnerData.dominantTenGod] }
+        { el: 'main', 
+          urls: [
+            `${mainFolder}/face1.jpg`,
+            `${mainFolder}/face.jpg`,
+            `assets/${gPrefix}_face.png`,
+            `assets/${gPrefix}_face_${sajuResult.dominantTenGod}.jpg`
+          ], 
+          filter: fallbackFilters[sajuResult.dominantTenGod] 
+        },
+        { el: 'partner', 
+          urls: [
+            `${partnerFolder}/face1.jpg`,
+            `${partnerFolder}/face.jpg`,
+            `assets/${pPrefix}_face.png`,
+            `assets/${pPrefix}_face_${partnerData.dominantTenGod}.jpg`
+          ], 
+          filter: fallbackFilters[partnerData.dominantTenGod] 
+        }
     ];
 
     let loadedSrcs = {};
@@ -651,19 +680,26 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
     };
 
     imgsInfo.forEach(item => {
+        let urlIndex = 0;
         const img = new Image();
-        // Removed crossOrigin="anonymous" to prevent CORS failures causing fallback to trigger
+        
         img.onload = () => {
-            loadedSrcs[item.el] = item.src;
-            finalFilters[item.el] = "none";
+            loadedSrcs[item.el] = item.urls[urlIndex];
+            // Apply filter only if it fell back to the root TenGod image (last url)
+            finalFilters[item.el] = (urlIndex === item.urls.length - 1) ? item.filter : "none"; 
             checkLoad();
         };
         img.onerror = () => {
-            loadedSrcs[item.el] = item.fallback;
-            finalFilters[item.el] = item.filter;
-            checkLoad();
+            urlIndex++;
+            if (urlIndex < item.urls.length) {
+                img.src = item.urls[urlIndex];
+            } else {
+                loadedSrcs[item.el] = item.urls[item.urls.length - 1];
+                finalFilters[item.el] = item.filter;
+                checkLoad();
+            }
         };
-        img.src = item.src;
+        img.src = item.urls[urlIndex];
     });
 });
 
