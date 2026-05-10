@@ -990,10 +990,10 @@ window.loadAdminData = async function() {
     const partnersContainer = document.getElementById('admin-list-partners');
     const countSpan = document.getElementById('admin-count');
     
-    document.getElementById('tab-btn-searches').style.color = currentAdminTab === 'searches' ? 'var(--primary-color)' : '#aaa';
-    document.getElementById('tab-btn-searches').style.borderBottomColor = currentAdminTab === 'searches' ? 'var(--primary-color)' : 'transparent';
-    document.getElementById('tab-btn-partners').style.color = currentAdminTab === 'partners' ? 'var(--primary-color)' : '#aaa';
-    document.getElementById('tab-btn-partners').style.borderBottomColor = currentAdminTab === 'partners' ? 'var(--primary-color)' : 'transparent';
+    document.getElementById('tab-btn-searches').style.color = currentAdminTab === 'searches' ? 'var(--primary-color, #333)' : '#aaa';
+    document.getElementById('tab-btn-searches').style.borderBottomColor = currentAdminTab === 'searches' ? 'var(--primary-color, #333)' : 'transparent';
+    document.getElementById('tab-btn-partners').style.color = currentAdminTab === 'partners' ? 'var(--primary-color, #333)' : '#aaa';
+    document.getElementById('tab-btn-partners').style.borderBottomColor = currentAdminTab === 'partners' ? 'var(--primary-color, #333)' : 'transparent';
     
     searchesContainer.style.display = currentAdminTab === 'searches' ? 'flex' : 'none';
     partnersContainer.style.display = currentAdminTab === 'partners' ? 'flex' : 'none';
