@@ -401,8 +401,30 @@ function generateAnalysis(sajuResult, pronoun = "당신") {
     const bodyText = calculateBodyType(sajuResult.palja, sajuResult.counts);
     const vibeText = calculateVibe(sajuResult.palja, sajuResult.dominantSinsal, sajuResult);
     
+    const elData = ELEMENT_TRAITS[sajuResult.primaryElement];
+    const tenGodData = TENGODS_DATA[sajuResult.dominantTenGod];
+    const faceText = `얼굴은 ${elData.face} 또한 십성 '${sajuResult.dominantTenGod}'의 영향으로 ${tenGodData.desc}`;
+    
     return {
         body: bodyText,
+        face: faceText,
+        vibe: vibeText
+    };
+}
+
+function generatePartnerAnalysis(element, sinsal, tengod, pronoun = "당신") {
+    const elData = BODY_DICTIONARY[element];
+    const elFaceData = ELEMENT_TRAITS[element];
+    const tenGodData = TENGODS_DATA[tengod];
+    const sinsalData = SINSAL_DATA[sinsal];
+
+    const bodyText = `${pronoun}의 체형은 기본적으로 ${elData.desc}을 지니고 있습니다.`;
+    const faceText = `얼굴은 ${elFaceData.face} 그리고 십성 '${tengod}'의 영향으로 ${tenGodData.desc}`;
+    const vibeText = `신살 '${sinsal}'이 더해져, ${sinsalData.desc}`;
+
+    return {
+        body: bodyText,
+        face: faceText,
         vibe: vibeText
     };
 }
@@ -809,6 +831,10 @@ function renderResult(name, sajuResult, analysis, imgSrc, filter, gender) {
             <strong style="color:var(--primary); font-size:1.1rem; display:block; margin-bottom: 0.5rem;">[체형 특징]</strong>
             ${analysis.body}
         </div>
+        <div style="margin-bottom: 1.2rem; line-height: 1.6;">
+            <strong style="color:var(--primary); font-size:1.1rem; display:block; margin-bottom: 0.5rem;">[외모 및 이목구비]</strong>
+            ${analysis.face}
+        </div>
         <div style="line-height: 1.6;">
             <strong style="color:var(--primary); font-size:1.1rem; display:block; margin-bottom: 0.5rem;">[아우라 & 분위기]</strong>
             ${analysis.vibe}
@@ -861,8 +887,24 @@ function renderPartnerResult(partnerData, imgSrc, filter, gender) {
     document.getElementById('p-element-tag').textContent = `체형: ${partnerData.primaryElement} - ${elShortDesc[partnerData.primaryElement]}`;
 
     const pronoun = gender === 'male' ? "그녀" : "그";
-    const pAnalysis = generateAnalysis(partnerData.primaryElement, partnerData.dominantSinsal, partnerData.dominantTenGod, pronoun);
-    document.getElementById('p-combined-analysis').innerHTML = pAnalysis.combined + `<br><br><span style="color:var(--fire); font-weight:600;">💞 완벽한 보완재:</span> 이 사람은 당신의 일지와 조후를 완벽히 채워주는 운명적 이끌림을 선사합니다.`;
+    const pAnalysis = generatePartnerAnalysis(partnerData.primaryElement, partnerData.dominantSinsal, partnerData.dominantTenGod, pronoun);
+    document.getElementById('p-combined-analysis').innerHTML = `
+        <div style="margin-bottom: 1.2rem; line-height: 1.6;">
+            <strong style="color:var(--primary); font-size:1.1rem; display:block; margin-bottom: 0.5rem;">[체형 특징]</strong>
+            ${pAnalysis.body}
+        </div>
+        <div style="margin-bottom: 1.2rem; line-height: 1.6;">
+            <strong style="color:var(--primary); font-size:1.1rem; display:block; margin-bottom: 0.5rem;">[외모 및 이목구비]</strong>
+            ${pAnalysis.face}
+        </div>
+        <div style="line-height: 1.6; margin-bottom: 1.2rem;">
+            <strong style="color:var(--primary); font-size:1.1rem; display:block; margin-bottom: 0.5rem;">[아우라 & 분위기]</strong>
+            ${pAnalysis.vibe}
+        </div>
+        <div style="padding: 1rem; background: rgba(255,107,107,0.1); border-radius: 8px;">
+            <span style="color:var(--fire); font-weight:600;">💞 완벽한 보완재:</span> 이 사람은 당신의 일지와 조후를 완벽히 채워주는 운명적 이끌림을 선사합니다.
+        </div>
+    `;
 
     const pMainImg = document.getElementById('p-main-img');
     pMainImg.src = imgSrc;
