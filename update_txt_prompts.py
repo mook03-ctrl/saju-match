@@ -3,11 +3,11 @@ import os
 base_dir = "assets/appearance_types"
 
 elements_desc = {
-    "목": "slender and well-proportioned body, slightly long natural face shape",
-    "화": "fit and healthy body with nice shoulders, natural V-line face shape, bright eyes",
-    "토": "balanced and sturdy body, round and soft friendly face shape",
-    "금": "slim body, clear and neat facial features",
-    "수": "soft and slightly curvy body, round face with big dewy eyes"
+    "목": "slender and tall frame, thin and lean body, clear and transparent skin, slightly long natural face shape",
+    "화": "prominent joints, well-developed upper body, lively rosy complexion, slim V-line face, bright eyes",
+    "토": "solid and heavy build, muscular or curvy, smooth and glossy healthy skin, round and soft friendly face",
+    "금": "broad shoulders, solid square frame, firm and tight flesh, fair and clean elastic skin, clear and neat facial features",
+    "수": "flexible soft curved skeleton, well-developed lower body, dewy and soft transparent skin, round face with big eyes"
 }
 
 tengods_desc = {

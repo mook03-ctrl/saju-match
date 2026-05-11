@@ -1,6 +1,6 @@
 [토 + 재성 + charm] 외모 특징 및 생성 프롬프트
 
-1. 체형/얼굴형 (오행 - 토): balanced and sturdy body, round and soft friendly face shape
+1. 체형/얼굴형 (오행 - 토): solid and heavy build, muscular or curvy, smooth and glossy healthy skin, round and soft friendly face
 2. 이목구비/표정 (십성 - 재성): neat and symmetrical face, highly likable and gentle impression
 3. 전체적인 분위기 (charm): subtle attractive charm, slightly alluring but friendly aura
 
@@ -8,7 +8,7 @@
 [ 미드저니 / ChatGPT 등 AI 이미지 생성용 복사/붙여넣기 프롬프트 ]
 =======================================================
 
-A highly realistic, photorealistic portrait of a young Korean man in his late 20s to early 30s. He has a balanced and sturdy body, round and soft friendly face shape. He exhibits a neat and symmetrical face, highly likable and gentle impression and a subtle attractive charm, slightly alluring but friendly aura. He is wearing stylish but comfortable daily spring clothing (casual wear). The setting is a bright cozy stylish cafe OR beautiful sunny outdoor park. Shot type: Medium full shot, thigh-up portrait, slightly zoomed in. IMPORTANT: Do NOT use cold high-fashion model expressions. NO harsh cheekbones, NO angry or stern looks. The vibe must be pure, natural, friendly, and highly approachable. ABSOLUTELY NO earrings, NO necklaces, NO accessories on the man. 2k resolution, photorealistic, cinematic lighting, highly detailed. --ar 4:5. Ensure final output format is JPG or PNG.
+A highly realistic, photorealistic portrait of a young Korean man in his late 20s to early 30s. He has a solid and heavy build, muscular or curvy, smooth and glossy healthy skin, round and soft friendly face. He exhibits a neat and symmetrical face, highly likable and gentle impression and a subtle attractive charm, slightly alluring but friendly aura. He is wearing stylish but comfortable daily spring clothing (casual wear). The setting is a bright cozy stylish cafe OR beautiful sunny outdoor park. Shot type: Medium full shot, thigh-up portrait, slightly zoomed in. IMPORTANT: Do NOT use cold high-fashion model expressions. NO harsh cheekbones, NO angry or stern looks. The vibe must be pure, natural, friendly, and highly approachable. ABSOLUTELY NO earrings, NO necklaces, NO accessories on the man. 2k resolution, photorealistic, cinematic lighting, highly detailed. --ar 4:5. Ensure final output format is JPG or PNG.
 
 =======================================================
 * 사용 팁: 
