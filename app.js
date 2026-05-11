@@ -277,58 +277,132 @@ function findIdealPartner(userSaju) {
     };
 }
 
-function getArchetype(element, tengod, sinsal) {
-    const archetypes = [
-        { name: "🌿 청순 동안형", e: ["목", "수"], t: ["인성", "식상"], s: ["도화살"], desc: "순수하고 맑은 첫사랑 느낌" },
-        { name: "🔥 화려 섹시형", e: ["화", "금"], t: ["식상", "재성"], s: ["도화살", "홍염살"], desc: "강한 끌림을 주는 화려한 매력" },
-        { name: "🟫 안정 호감형", e: ["토"], t: ["재성", "관성"], s: ["천을귀인"], desc: "조화롭고 편안한 신뢰감" },
-        { name: "⚪ 도시 세련형", e: ["금"], t: ["관성", "재성"], s: ["괴강살", "천을귀인"], desc: "차가운 매력의 세련된 모델 느낌" },
-        { name: "💧 귀여운 감성형", e: ["수"], t: ["식상", "인성"], s: ["도화살", "홍염살"], desc: "친근하고 애교 넘치는 매력" },
-        { name: "⚔️ 카리스마 강한형", e: ["화", "금"], t: ["관성", "비겁"], s: ["괴강살", "역마살"], desc: "선이 굵고 강렬한 압도적 존재감" },
-        { name: "🌍 이국적 개성형", e: ["수", "금", "목"], t: ["식상", "재성"], s: ["역마살"], desc: "흔하지 않은 구조의 독창적인 매력" }
-    ];
+const BODY_DICTIONARY = {
+    "목": {
+        bone: "수직으로 뻗은 길고 슬림한 프레임",
+        flesh: "군살이 잘 붙지 않고 선이 얇은 체형",
+        desc: "수직 성장의 기운으로 팔다리가 길고 슬림한 프레임"
+    },
+    "화": {
+        bone: "위로 발산하는 뼈마디가 도드라진 프레임",
+        flesh: "상체가 특히 발달하며 에너지가 밖으로 뻗어나가는 체형",
+        desc: "위로 발산하는 기운으로 뼈마디가 도드라지고 상체가 발달한 체형"
+    },
+    "토": {
+        bone: "중심이 단단하고 안정감 있는 뼈대",
+        flesh: "근육질 또는 두툼한 살집이 잘 붙는 무게감 있는 체격",
+        desc: "중첩과 응집의 기운으로 근육이나 살집이 잘 붙는 무게감 있는 체격"
+    },
+    "금": {
+        bone: "어깨가 벌어지고 골격이 견고한 사각형 프레임",
+        flesh: "살결이 단단하고 수축된 야무진 체형",
+        desc: "수축과 견고함의 기운으로 골격이 단단하고 다부진 프레임"
+    },
+    "수": {
+        bone: "유연하고 곡선적인 부드러운 뼈대",
+        flesh: "하체가 발달하거나 부종형으로 인해 부드러운 실루엣을 띠는 체형",
+        desc: "유연한 기운으로 부드러운 곡선의 실루엣과 하체가 발달한 체형"
+    }
+};
 
-    let bestMatch = archetypes[0];
-    let maxScore = -1;
-
-    archetypes.forEach(arc => {
-        let score = 0;
-        if(arc.e.includes(element)) score += 2;
-        if(arc.t.includes(tengod)) score += 2;
-        if(arc.s.includes(sinsal)) score += 1.5;
-        
-        // Random variance for tie-breaking
-        score += Math.random() * 0.1;
-        
-        if(score > maxScore) {
-            maxScore = score;
-            bestMatch = arc;
+function calculateBodyType(palja, counts) {
+    const scores = { "목": 0, "화": 0, "토": 0, "금": 0, "수": 0 };
+    
+    // 1. 월지 (Season) - 40%
+    const monthElement = ELEMENTS_KR[palja.mB];
+    scores[monthElement] += 40;
+    
+    // 2. 일간 (Day Master) - 30%
+    const dayElement = ELEMENTS_KR[palja.dS];
+    scores[dayElement] += 30;
+    
+    // 3. 다자 오행 (Dominant Element) - 30%
+    let maxCount = -1;
+    let dominantElements = [];
+    for (let el in counts) {
+        if (counts[el] > maxCount) {
+            maxCount = counts[el];
+            dominantElements = [el];
+        } else if (counts[el] === maxCount) {
+            dominantElements.push(el);
         }
-    });
-
-    return bestMatch;
+    }
+    
+    const domScore = 30 / dominantElements.length;
+    dominantElements.forEach(el => scores[el] += domScore);
+    
+    let sorted = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
+    let primary = sorted[0];
+    let secondary = sorted[1];
+    
+    let zeroElements = Object.keys(counts).filter(el => counts[el] === 0);
+    
+    let bodyText = "";
+    if (primary === secondary || scores[secondary] < 20) {
+        bodyText = `사주 내 <strong>${primary}(${ELEMENT_HAN[primary]})</strong>의 기운이 가장 강력하게 작용하여, ${BODY_DICTIONARY[primary].desc}을 지니고 있습니다.`;
+    } else {
+        bodyText = `사주 내 <strong>${primary}(${ELEMENT_HAN[primary]})</strong>와 <strong>${secondary}(${ELEMENT_HAN[secondary]})</strong>의 기운이 교차하며 복합적인 체형을 이룹니다. 기본적으로 <strong>${BODY_DICTIONARY[dayElement].bone}</strong>을 바탕으로, <strong>${BODY_DICTIONARY[primary === dayElement ? secondary : primary].flesh}</strong>이 더해진 매력적인 밸런스를 가집니다.`;
+    }
+    
+    if (zeroElements.length > 0) {
+        bodyText += `<br><br><span style="font-size:0.85em; color:#888;">*참고: 사주 내 <strong>${zeroElements.join(', ')}</strong> 기운이 부족하여, 해당 오행이 관장하는 신체 부위가 상대적으로 왜소하거나 약할 수 있는 특징이 있습니다.</span>`;
+    }
+    
+    return bodyText;
 }
 
-function generateAnalysis(element, sinsal, tengod, pronoun = "당신") {
-    const elData = ELEMENT_TRAITS[element];
-    const tenGodData = TENGODS_DATA[tengod];
-    const sinsalData = SINSAL_DATA[sinsal];
-    const arc = getArchetype(element, tengod, sinsal);
+function calculateVibe(palja, dominantSinsal, sajuResult) {
+    let vibeText = "";
+    
+    const tenGodCounts = {"비겁":0, "식상":0, "재성":0, "관성":0, "인성":0};
+    const dm = ELEMENTS_KR[palja.dS];
+    
+    const stems = [palja.yS, palja.mS, palja.hS];
+    const branches = [palja.yB, palja.mB, palja.dB, palja.hB];
+    
+    stems.forEach(char => { tenGodCounts[getTenGod(dm, ELEMENTS_KR[char])]++; });
+    branches.forEach(char => { tenGodCounts[getTenGod(dm, ELEMENTS_KR[char])]++; });
+    
+    let hasSiksang = tenGodCounts["식상"] >= 3;
+    let hasInseong = tenGodCounts["인성"] >= 3;
+    
+    if (hasSiksang && hasInseong) {
+        vibeText += "화려하면서도 내면의 깊이가 느껴지는 독특하고 세련된 아우라를 풍깁니다. ";
+    } else if (hasSiksang) {
+        vibeText += "표현력이 뛰어나고 시선을 사로잡는 세련되고 화려한 분위기를 자아냅니다. ";
+    } else if (hasInseong) {
+        vibeText += "차분하고 지적인 느낌을 주며, 단아하고 정적인 클래식한 무드가 돋보입니다. ";
+    } else if (tenGodCounts["관성"] >= 3) {
+        vibeText += "반듯하고 신뢰감을 주는 절제된 매력과 고급스러운 아우라를 지녔습니다. ";
+    } else if (tenGodCounts["재성"] >= 3) {
+        vibeText += "현실감각이 뛰어나며 사람을 편안하게 이끄는 부드럽고 여유로운 분위기를 풍깁니다. ";
+    } else if (tenGodCounts["비겁"] >= 3) {
+        vibeText += "주관이 뚜렷하고 당당하며, 사람을 끌어당기는 독립적이고 강렬한 에너지를 발산합니다. ";
+    } else {
+        vibeText += "다양한 기운이 조화롭게 섞여 튀지 않으면서도 안정감 있고 부드러운 매력을 줍니다. ";
+    }
+    
+    if (dominantSinsal.includes("도화살") && dominantSinsal.includes("홍염살")) {
+        vibeText += "<br><br>특히 <strong>도화살</strong>과 <strong>홍염살</strong>을 모두 갖추어, 스치기만 해도 사람의 시선을 끄는 강력한 매력 포인트(예: 깊은 눈매, 매혹적인 미소)가 외모에 묻어납니다.";
+    } else if (dominantSinsal.includes("도화살")) {
+        vibeText += "<br><br>또한 <strong>도화살</strong>의 영향으로, 가만히 있어도 타인의 이목을 집중시키는 특유의 매력과 스타성이 외모에 묻어납니다.";
+    } else if (dominantSinsal.includes("홍염살")) {
+        vibeText += "<br><br>또한 <strong>홍염살</strong>의 영향으로, 웃을 때 유독 매력적이거나 특정 표정에서 짙은 호소력을 지닌 사랑스러운 분위기가 돋보입니다.";
+    } else if (dominantSinsal.includes("화개살")) {
+        vibeText += "<br><br>또한 <strong>화개살</strong>의 영향으로, 화려함을 좇기보다 내면의 고독함이 묻어나는 깊고 신비로운 분위기가 외모에 배어 있습니다.";
+    }
+    
+    return vibeText;
+}
 
-    const combinedText = `
-${pronoun}의 외모는 오행, 십성, 신살의 시너지로 완성된 **[${arc.name}]**입니다. 
-${arc.desc}을 풍기는 특별한 매력을 지니고 있습니다.
-
-**[체형과 이목구비의 근원: ${ELEMENT_LABELS[element]}]**
-오행 '${element}'의 영향으로 ${elData.body} 얼굴은 ${elData.face} 베이스로 깔려 있는 분위기는 ${elData.vibe}입니다.
-
-**[인상과 뼈대의 주장: ${tengod}]**
-십성 중 '${tengod}'의 기운이 강하여 ${tenGodData.desc} 사회적으로 보여지는 ${pronoun}의 얼굴은 사람들에게 명확한 이미지를 각인시킵니다.
-
-**[분위기와 끌림의 포인트: ${sinsal}]**
-여기에 신살 '${sinsal}'이 더해져, ${sinsalData.desc}`;
-
-    return { combined: combinedText.trim().replace(/\n/g, "<br>") };
+function generateAnalysis(sajuResult, pronoun = "당신") {
+    const bodyText = calculateBodyType(sajuResult.palja, sajuResult.counts);
+    const vibeText = calculateVibe(sajuResult.palja, sajuResult.dominantSinsal, sajuResult);
+    
+    return {
+        body: bodyText,
+        vibe: vibeText
+    };
 }
 
 function calculateLoveScore(sajuResult, gender) {
@@ -614,7 +688,7 @@ document.getElementById('saju-form').addEventListener('submit', async (e) => {
         time: time,
         sajuResult: sajuResult
     };
-    const analysis = generateAnalysis(sajuResult.primaryElement, sajuResult.dominantSinsal, sajuResult.dominantTenGod);
+    const analysis = generateAnalysis(sajuResult);
     const partnerData = findIdealPartner(sajuResult);
 
     const gPrefix = gender === 'male' ? 'm' : 'f';
@@ -728,7 +802,16 @@ function renderResult(name, sajuResult, analysis, imgSrc, filter, gender) {
     document.getElementById('sinsal-tag').textContent = `분위기: ${sajuResult.dominantSinsal} - ${SINSAL_DATA[sajuResult.dominantSinsal].label}`;
     document.getElementById('element-tag').textContent = `체형: ${sajuResult.primaryElement} - ${elShortDesc[sajuResult.primaryElement]}`;
 
-    document.getElementById('combined-analysis').innerHTML = analysis.combined;
+    document.getElementById('combined-analysis').innerHTML = `
+        <div style="margin-bottom: 1.2rem; line-height: 1.6;">
+            <strong style="color:var(--primary); font-size:1.1rem; display:block; margin-bottom: 0.5rem;">[체형 특징]</strong>
+            ${analysis.body}
+        </div>
+        <div style="line-height: 1.6;">
+            <strong style="color:var(--primary); font-size:1.1rem; display:block; margin-bottom: 0.5rem;">[아우라 & 분위기]</strong>
+            ${analysis.vibe}
+        </div>
+    `;
 
     const mainImg = document.getElementById('main-img');
     mainImg.src = imgSrc;
