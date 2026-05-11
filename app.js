@@ -283,26 +283,31 @@ const BODY_DICTIONARY = {
     "목": {
         bone: "수직으로 뻗은 길고 슬림한 프레임",
         flesh: "군살이 잘 붙지 않고 선이 얇은 체형",
+        skin: "피부가 맑고 투명하며 얇은 편입니다",
         desc: "수직 성장의 기운으로 팔다리가 길고 슬림한 프레임"
     },
     "화": {
         bone: "위로 발산하는 뼈마디가 도드라진 프레임",
         flesh: "상체가 특히 발달하며 에너지가 밖으로 뻗어나가는 체형",
+        skin: "혈색이 잘 돌고 생기 있는 붉은 기운이 감도는 피부입니다",
         desc: "위로 발산하는 기운으로 뼈마디가 도드라지고 상체가 발달한 체형"
     },
     "토": {
         bone: "중심이 단단하고 안정감 있는 뼈대",
         flesh: "근육질 또는 두툼한 살집이 잘 붙는 무게감 있는 체격",
+        skin: "피부결이 매끄럽고 윤기가 흐르며 건강한 느낌을 줍니다",
         desc: "중첩과 응집의 기운으로 근육이나 살집이 잘 붙는 무게감 있는 체격"
     },
     "금": {
         bone: "어깨가 벌어지고 골격이 견고한 사각형 프레임",
         flesh: "살결이 단단하고 수축된 야무진 체형",
+        skin: "피부가 희고 깨끗하며 탄력 있고 쫀쫀한 느낌을 줍니다",
         desc: "수축과 견고함의 기운으로 골격이 단단하고 다부진 프레임"
     },
     "수": {
         bone: "유연하고 곡선적인 부드러운 뼈대",
         flesh: "하체가 발달하거나 부종형으로 인해 부드러운 실루엣을 띠는 체형",
+        skin: "물기를 머금은 듯 촉촉하고 부드러우며 투명한 살결을 지녔습니다",
         desc: "유연한 기운으로 부드러운 곡선의 실루엣과 하체가 발달한 체형"
     }
 };
@@ -345,6 +350,9 @@ function calculateBodyType(palja, counts) {
     } else {
         bodyText = `사주 내 <strong>${primary}(${ELEMENT_HAN[primary]})</strong>와 <strong>${secondary}(${ELEMENT_HAN[secondary]})</strong>의 기운이 교차하며 복합적인 체형을 이룹니다. 기본적으로 <strong>${BODY_DICTIONARY[dayElement].bone}</strong>을 바탕으로, <strong>${BODY_DICTIONARY[primary === dayElement ? secondary : primary].flesh}</strong>이 더해진 매력적인 밸런스를 가집니다.`;
     }
+    
+    let domElement = dominantElements[0];
+    bodyText += `<br>또한 살결은 사주 내 지배적인 다자 오행인 <strong>${domElement}(${ELEMENT_HAN[domElement]})</strong>의 영향을 받아, <strong>${BODY_DICTIONARY[domElement].skin}</strong>`;
     
     if (zeroElements.length > 0) {
         bodyText += `<br><br><span style="font-size:0.85em; color:#888;">*참고: 사주 내 <strong>${zeroElements.join(', ')}</strong> 기운이 부족하여, 해당 오행이 관장하는 신체 부위가 상대적으로 왜소하거나 약할 수 있는 특징이 있습니다.</span>`;
@@ -418,7 +426,7 @@ function generatePartnerAnalysis(element, sinsal, tengod, pronoun = "당신") {
     const tenGodData = TENGODS_DATA[tengod];
     const sinsalData = SINSAL_DATA[sinsal];
 
-    const bodyText = `${pronoun}의 체형은 기본적으로 ${elData.desc}을 지니고 있습니다.`;
+    const bodyText = `${pronoun}의 체형은 기본적으로 ${elData.desc}을 지니고 있습니다. <br>또한 지배적인 기운인 <strong>${element}(${ELEMENT_HAN[element]})</strong>의 영향으로 <strong>${elData.skin}</strong>`;
     const faceText = `얼굴은 ${elFaceData.face} 그리고 십성 '${tengod}'의 영향으로 ${tenGodData.desc}`;
     const vibeText = `신살 '${sinsal}'이 더해져, ${sinsalData.desc}`;
 
