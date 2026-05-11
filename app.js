@@ -277,6 +277,8 @@ function findIdealPartner(userSaju) {
     };
 }
 
+const ELEMENT_HAN = { "목": "木", "화": "火", "토": "土", "금": "金", "수": "水" };
+
 const BODY_DICTIONARY = {
     "목": {
         bone: "수직으로 뻗은 길고 슬림한 프레임",
