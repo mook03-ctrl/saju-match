@@ -313,17 +313,53 @@ const BODY_DICTIONARY = {
 };
 
 function calculateBodyType(palja, counts) {
-    const scores = { "목": 0, "화": 0, "토": 0, "금": 0, "수": 0 };
+    const dmStem = palja.dS;
+    const dmElement = ELEMENTS_KR[dmStem];
+    const monthBranch = palja.mB;
     
-    // 1. 월지 (Season) - 40%
-    const monthElement = ELEMENTS_KR[palja.mB];
-    scores[monthElement] += 40;
+    const yangStems = ["갑", "병", "무", "경", "임"];
+    const isYang = yangStems.includes(dmStem);
+    const frameSize = isYang ? "밖으로 뻗어나가는 큰 골격" : "안으로 수렴하는 아담하거나 얇은 뼈대";
+
+    const elementSilhouette = {
+        "목": "나무처럼 위로 곧게 뻗은 선형 실루엣",
+        "화": "위로 솟구치고 발산하는 실루엣",
+        "토": "둥글고 안정감 있는 두터운 실루엣",
+        "금": "각지고 단단한 다부진 실루엣",
+        "수": "유연하고 부드러운 곡선 실루엣"
+    };
+    const silhouette = elementSilhouette[dmElement] || "조화로운 실루엣";
+
+    const tenGodCounts = {"비겁":0, "식상":0, "재성":0, "관성":0, "인성":0};
+    const stems = [palja.yS, palja.mS, palja.hS];
+    const branches = [palja.yB, palja.mB, palja.dB, palja.hB];
     
-    // 2. 일간 (Day Master) - 30%
-    const dayElement = ELEMENTS_KR[palja.dS];
-    scores[dayElement] += 30;
+    stems.forEach(char => { tenGodCounts[getTenGod(dmElement, ELEMENTS_KR[char])]++; });
+    branches.forEach(char => { tenGodCounts[getTenGod(dmElement, ELEMENTS_KR[char])]++; });
+    tenGodCounts["비겁"]++; 
+
+    let maxTgCount = -1;
+    let dominantTenGods = [];
+    for (let tg in tenGodCounts) {
+        if (tenGodCounts[tg] > maxTgCount) {
+            maxTgCount = tenGodCounts[tg];
+            dominantTenGods = [tg];
+        } else if (tenGodCounts[tg] === maxTgCount) {
+            dominantTenGods.push(tg);
+        }
+    }
     
-    // 3. 다자 오행 (Dominant Element) - 30%
+    let domTenGod = dominantTenGods[0]; 
+    
+    const tgFlesh = {
+        "비겁": "근육질이 잘 붙으며 어깨가 발달한 다부진 체형",
+        "식상": "마르기보다는 통통하거나 글래머러스한 부드러운 살집",
+        "재성": "뚱뚱하지도 마르지도 않은 밸런스 좋고 깔끔한 체형",
+        "관성": "살이 잘 찌지 않아 마르고 슬림하며 뼈대가 도드라지는 체형",
+        "인성": "움직임이 적어 하체가 발달하거나 부드럽고 유연한 살집"
+    };
+    const fleshDesc = tgFlesh[domTenGod] || "균형잡힌 체형";
+
     let maxCount = -1;
     let dominantElements = [];
     for (let el in counts) {
@@ -334,30 +370,24 @@ function calculateBodyType(palja, counts) {
             dominantElements.push(el);
         }
     }
-    
-    const domScore = 30 / dominantElements.length;
-    dominantElements.forEach(el => scores[el] += domScore);
-    
-    let sorted = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
-    let primary = sorted[0];
-    let secondary = sorted[1];
+    let domElement = dominantElements[0];
+
+    const springSummer = ["인", "묘", "진", "사", "오", "미"];
+    const isSpringSummer = springSummer.includes(monthBranch);
+    const seasonDesc = isSpringSummer ? 
+        "<strong>봄/여름</strong>에 태어나 발산하는 기운이 강하므로 붓기가 적고 날렵한 느낌을 줍니다." : 
+        "<strong>가을/겨울</strong>에 태어나 수렴하는 기운이 강하므로 살결이 단단하고 밀도 있는 편입니다.";
+
+    let bodyText = `당신의 체형은 기본적으로 <strong>[${isYang ? '양(陽)' : '음(陰)'}: ${frameSize}]</strong>과 <strong>[${dmElement}(${ELEMENT_HAN[dmElement]}): ${silhouette}]</strong>을 지니고 있습니다. `;
+    bodyText += `<br>특히 사주 내 <strong>[${domTenGod}]</strong>의 기운이 강하게 작용하여, <strong>[${fleshDesc}]</strong>을 띠는 매력적인 체형입니다. `;
+    bodyText += `<br>추가로 ${seasonDesc}`;
+    bodyText += `<br>또한 살결은 사주 내 다자 오행인 <strong>${domElement}(${ELEMENT_HAN[domElement]})</strong>의 영향을 받아, <strong>${BODY_DICTIONARY[domElement].skin}</strong>`;
     
     let zeroElements = Object.keys(counts).filter(el => counts[el] === 0);
-    
-    let bodyText = "";
-    if (primary === secondary || scores[secondary] < 20) {
-        bodyText = `사주 내 <strong>${primary}(${ELEMENT_HAN[primary]})</strong>의 기운이 가장 강력하게 작용하여, ${BODY_DICTIONARY[primary].desc}을 지니고 있습니다.`;
-    } else {
-        bodyText = `사주 내 <strong>${primary}(${ELEMENT_HAN[primary]})</strong>와 <strong>${secondary}(${ELEMENT_HAN[secondary]})</strong>의 기운이 교차하며 복합적인 체형을 이룹니다. 기본적으로 <strong>${BODY_DICTIONARY[dayElement].bone}</strong>을 바탕으로, <strong>${BODY_DICTIONARY[primary === dayElement ? secondary : primary].flesh}</strong>이 더해진 매력적인 밸런스를 가집니다.`;
-    }
-    
-    let domElement = dominantElements[0];
-    bodyText += `<br>또한 살결은 사주 내 지배적인 다자 오행인 <strong>${domElement}(${ELEMENT_HAN[domElement]})</strong>의 영향을 받아, <strong>${BODY_DICTIONARY[domElement].skin}</strong>`;
-    
     if (zeroElements.length > 0) {
         bodyText += `<br><br><span style="font-size:0.85em; color:#888;">*참고: 사주 내 <strong>${zeroElements.join(', ')}</strong> 기운이 부족하여, 해당 오행이 관장하는 신체 부위가 상대적으로 왜소하거나 약할 수 있는 특징이 있습니다.</span>`;
     }
-    
+
     return bodyText;
 }
 
@@ -426,7 +456,26 @@ function generatePartnerAnalysis(element, sinsal, tengod, pronoun = "당신") {
     const tenGodData = TENGODS_DATA[tengod];
     const sinsalData = SINSAL_DATA[sinsal];
 
-    const bodyText = `${pronoun}의 체형은 기본적으로 ${elData.desc}을 지니고 있습니다. <br>또한 지배적인 기운인 <strong>${element}(${ELEMENT_HAN[element]})</strong>의 영향으로 <strong>${elData.skin}</strong>`;
+    const elementSilhouette = {
+        "목": "나무처럼 위로 곧게 뻗은 선형 실루엣",
+        "화": "위로 솟구치고 발산하는 실루엣",
+        "토": "둥글고 안정감 있는 두터운 실루엣",
+        "금": "각지고 단단한 다부진 실루엣",
+        "수": "유연하고 부드러운 곡선 실루엣"
+    };
+
+    const tgFlesh = {
+        "비겁": "근육질이 잘 붙으며 어깨가 발달한 다부진 체형",
+        "식상": "마르기보다는 통통하거나 글래머러스한 부드러운 살집",
+        "재성": "뚱뚱하지도 마르지도 않은 밸런스 좋고 깔끔한 체형",
+        "관성": "살이 잘 찌지 않아 마르고 슬림하며 뼈대가 도드라지는 체형",
+        "인성": "움직임이 적어 하체가 발달하거나 부드럽고 유연한 살집"
+    };
+
+    const silhouette = elementSilhouette[element] || "조화로운 실루엣";
+    const fleshDesc = tgFlesh[tengod] || "균형잡힌 체형";
+
+    const bodyText = `${pronoun}의 체형은 기본적으로 <strong>[${element}(${ELEMENT_HAN[element]}): ${silhouette}]</strong>을 지니고 있습니다. <br>특히 <strong>[${tengod}]</strong>의 기운이 작용하여, <strong>[${fleshDesc}]</strong>을 띠는 매력적인 체형입니다. <br>또한 지배적인 기운의 영향으로 <strong>${elData.skin}</strong>`;
     const faceText = `얼굴은 ${elFaceData.face} 그리고 십성 '${tengod}'의 영향으로 ${tenGodData.desc}`;
     const vibeText = `신살 '${sinsal}'이 더해져, ${sinsalData.desc}`;
 
