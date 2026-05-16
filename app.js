@@ -128,6 +128,33 @@ const PERSONALITY_TIPS = {
     }
 };
 
+const SPOUSE_TIPS = {
+    "female": {
+        "정재": "나의 든든한 지갑, 사치 안부리고 생활력 강함",
+        "편재": "내 남편은 나의 꼬봉",
+        "정관": "관계 좋음. 전통적인 남편상, 살짝 고리타분하고 책임감이 있음",
+        "편관": "인터넷 소설 남주처럼 성깔있는 재벌남 스타일. 하자있음",
+        "비견": "동료, 편안한 친구, 만만함",
+        "겁재": "나보다 뛰어난 고수, 자극, 라이벌",
+        "정인": "포용심, 남편덕을 많이 봄. 잔소리 있음",
+        "편인": "부부사이 냉담, 잔소리 있음",
+        "식신": "내 아들같음, 성격좋고 집안 좋음",
+        "상관": "완전 사고뭉치 아들, 그냥 피곤, 눈높은 배우자, 결혼은 늦을수 있음"
+    },
+    "male": {
+        "정재": "사치 안부림, 생활력 좋음. 찰떡 궁합",
+        "편재": "예쁜 여자, 바람기있고 돈 잘벌고 잘씀",
+        "정관": "내 상사같은 아내, 모시고 살아야함",
+        "편관": "내 아내가 능력자, 완전히 폭군이라 기죽어 살수있음",
+        "비견": "나와 비등한 동료, 편안한 친구, 만만함",
+        "겁재": "나보다 고수, 자극, 라이벌, 대적 상대",
+        "정인": "어머니같은 포용심, 아내덕, 잔소리 있음",
+        "편인": "계모같은, 별로 사이 안좋음, 잔소리",
+        "식신": "나의 딸, 아껴줌. 성격 집안 좋은 배우자",
+        "상관": "활동성, 똑똑, 눈높은 배우자, 결혼은 늦을수 있음"
+    }
+};
+
 const EL_INDEX = {"목":0, "화":1, "토":2, "금":3, "수":4};
 function getTenGod(dmEl, otherEl) {
     if(!otherEl) return "";
@@ -243,11 +270,14 @@ function calculateSaju(year, month, day, hour) {
     let mBranchElement = ELEMENTS_KR[palja.mB];
     let dominantTenGod = getTenGod(primaryElement, mBranchElement) || "비겁";
 
+    let dBranchMainStem = JIJANGGAN_HAN[palja.dB].split(",").pop();
+    let spouseTenGod = getExactTenGod(palja.dS, dBranchMainStem);
+
     let vibeGroup = getVibeGroup(dominantSinsal);
 
     return { 
         palja, counts, primaryElement, dominantSinsal, dominantTenGod, vibeGroup,
-        dBranchIdx: BRANCHES.indexOf(palja.dB), isSingang, yongsin 
+        dBranchIdx: BRANCHES.indexOf(palja.dB), isSingang, yongsin, spouseTenGod 
     };
 }
 
@@ -998,9 +1028,13 @@ function renderResult(name, sajuResult, analysis, imgSrc, filter, gender) {
                 <strong style="color:var(--primary); font-size:1rem; display:block;">[나의 성향 및 특징]</strong>
                 ${pTips.traits}
             </div>
-            <div>
+            <div style="margin-bottom: 0.8rem;">
                 <strong style="color:var(--primary); font-size:1rem; display:block;">[끌리는 이상형 & 연애 팁]</strong>
                 ${pTips.attraction}
+            </div>
+            <div style="padding-top: 0.8rem; border-top: 1px dashed #e2e8f0;">
+                <strong style="color:var(--primary); font-size:1rem; display:block; margin-bottom: 0.2rem;">[${gender === 'male' ? '미래의 내 아내는?' : '미래의 내 남편은?'}] (일지 ${sajuResult.spouseTenGod})</strong>
+                ${SPOUSE_TIPS[gender][sajuResult.spouseTenGod] || "아직 데이터가 준비되지 않았습니다."}
             </div>
         `;
     }
