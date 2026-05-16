@@ -294,10 +294,16 @@ function findIdealPartner(userSaju) {
     let pTenGod = TEN_GODS_MAP[Math.floor(Math.random() * TEN_GODS_MAP.length)];
     let pVibeGroup = getVibeGroup(pSinsal);
 
+    const ELEMENT_STEMS = {
+        "목": ["甲", "乙"], "화": ["丙", "丁"], "토": ["戊", "己"], "금": ["庚", "辛"], "수": ["壬", "癸"]
+    };
+    let pDayStem = ELEMENT_STEMS[partnerPrimaryElement][Math.floor(Math.random() * 2)];
+
     return {
         score,
         traitsText: partnerTraits.join(" + "),
         primaryElement: partnerPrimaryElement,
+        pDayStem,
         dominantSinsal: pSinsal,
         dominantTenGod: pTenGod,
         vibeGroup: pVibeGroup
@@ -1064,6 +1070,23 @@ function renderPartnerResult(partnerData, imgSrc, filter, gender) {
             <span style="color:var(--fire); font-weight:600;">💞 완벽한 보완재:</span> 이 사람은 당신의 일지와 조후를 완벽히 채워주는 운명적 이끌림을 선사합니다.
         </div>
     `;
+
+    const partnerGender = gender === 'male' ? 'female' : 'male';
+    const partnerTips = PERSONALITY_TIPS[partnerGender] && PERSONALITY_TIPS[partnerGender][partnerData.pDayStem];
+    if (partnerTips) {
+        document.getElementById('p-personality-analysis').innerHTML = `
+            <div style="margin-bottom: 0.8rem;">
+                <strong style="color:var(--primary); font-size:1rem; display:block;">[파트너 성향 및 특징]</strong>
+                ${partnerTips.traits}
+            </div>
+            <div>
+                <strong style="color:var(--primary); font-size:1rem; display:block;">[파트너가 끌리는 이상형 & 연애 팁]</strong>
+                ${partnerTips.attraction}
+            </div>
+        `;
+    } else {
+        document.getElementById('p-personality-analysis').innerHTML = "데이터가 부족합니다.";
+    }
 
     const pMainImg = document.getElementById('p-main-img');
     pMainImg.src = imgSrc;
