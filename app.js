@@ -1135,7 +1135,7 @@ document.getElementById('download-btn').addEventListener('click', () => {
         backgroundColor: null
     }).then(canvas => {
         const link = document.createElement('a');
-        link.download = 'soul-aura-card.png';
+        link.download = 'saju-match-result.png';
         link.href = canvas.toDataURL('image/png');
         link.click();
     });
