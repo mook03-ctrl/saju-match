@@ -338,7 +338,6 @@ input:focus {
     font-size: 0.9rem;
     line-height: 1.5;
     color: var(--text-main);
-    font-style: italic;
 }
 
 .card-footer {
